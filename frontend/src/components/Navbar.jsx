@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { LoginContext } from "../App"
+import LoginContext from "../LoginContext";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
@@ -11,6 +11,7 @@ const Navbar = () => {
 
     const LogOut = () => {
         isLoggedIn.setLogIn(false)
+        localStorage.clear()
         navigate("/login")
     }
 
@@ -59,7 +60,7 @@ const Navbar = () => {
                             <li className="relative">
                                 <button
                                     onClick={() => setShowDropdown(!showDropdown)}
-                                    className="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 md:hover:text-blue-700 rounded-sm md:p-0 dark:text-white md:dark:hover:text-blue-500"
+                                    className="cursor-pointer flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-600 md:hover:text-blue-700 rounded-sm md:p-0 dark:text-white md:dark:hover:text-blue-500"
                                 >
                                     User
                                     <svg className="w-2.5 h-2.5 ms-2.5" fill="none" viewBox="0 0 10 6">
@@ -72,10 +73,10 @@ const Navbar = () => {
                                     <div className="absolute right-0 mt-2 z-20 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
                                             <li>
-                                                <NavLink to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</NavLink>
+                                                <NavLink to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</NavLink>
                                             </li>
                                             <li>
-                                                <button onClick={() => setShowSubmenu(!showSubmenu)} className="flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                <button onClick={() => setShowSubmenu(!showSubmenu)} className="cursor-pointer flex items-center justify-between w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                     My Profile
                                                     <svg className="w-2.5 h-2.5 ms-2.5" fill="none" viewBox="0 0 10 6">
                                                         <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -86,7 +87,7 @@ const Navbar = () => {
                                                     <div className="bg-white dark:bg-gray-700 mt-1 rounded-lg shadow">
                                                         <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
                                                             <li>
-                                                                <NavLink to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Overview</NavLink>
+                                                                <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Overview</NavLink>
                                                             </li>
                                                             <li>
                                                                 <NavLink to="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">My Downloads</NavLink>

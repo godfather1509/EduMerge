@@ -27,8 +27,12 @@ class Login(APIView):
         if serializer.is_valid():
             email = serializer.validated_data["email"]
             password = serializer.validated_data["password"]
-            user_details = User.objects.get(email=email)
-            print(user_details.role)
+            user_details = User.objects.filter(email=email).first()
+            if user_details is None:
+                return Response(
+                    {"message": "User Does Not Exists", "errors": serializer.errors},
+                    status=status.HTTP_401_UNAUTHORIZED,
+                )
             user = authenticate(username=email, password=password)
             if user is None:
                 return Response(

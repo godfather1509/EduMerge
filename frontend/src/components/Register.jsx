@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { useState,useContext } from 'react'
 import api from '../api/baseusrl'
 import { useNavigate } from 'react-router-dom'
-import { LoginContext } from "../App"
+import LoginContext from "../LoginContext"
 
 
 const Register = ({ role }) => {

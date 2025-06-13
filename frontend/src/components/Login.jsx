@@ -3,7 +3,7 @@ import { useState, useContext } from 'react'
 import { Eye, EyeOff } from "lucide-react";
 import api from '../api/baseusrl'
 import { Link, useNavigate } from 'react-router-dom'
-import { LoginContext } from "../App"
+import LoginContext from "../LoginContext";
 
 
 const Login = () => {
@@ -14,15 +14,19 @@ const Login = () => {
     const userLogin = useContext(LoginContext)
 
     const togglePassword = () => setShowPassword(prev => !prev);
+
     const handelPost = async (newLogin) => {
         try {
             const response = await api.post('/auth/login/', newLogin)
             console.log(response.data["refresh"])
             userLogin.setLogIn(true)
+            localStorage.setItem('user',true)
             if (response.data["role"] === "admin") {
                 console.log(response.data["role"])
                 const DJNAGO_ADMIN_URL = import.meta.env.VITE_DJANGO_ADMIN_URL
+                // importing usr from .env file
                 window.location.href = DJNAGO_ADMIN_URL
+                // redirecting to admin page if user is admin
             }
             else {
                 console.log(response.data["role"])
@@ -74,10 +78,9 @@ const Login = () => {
                         <input
                             {...register("password", { required: "Password is required" })}
                             type={showPassword ? "text" : "password"}
+                            // if showPassword is true then type is text else type is password
                             id="floating_password"
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:text-white dark:border-gray-600 dark:focus:border-blue-500 pr-10"
-                            placeholder=" "
-                        />
+                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer dark:text-white dark:border-gray-600 dark:focus:border-blue-500 pr-10"  placeholder=""/>
                         <label
                             htmlFor="floating_password"
                             className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6 peer-focus:text-blue-600 peer-focus:dark:text-blue-500"
@@ -89,7 +92,7 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={togglePassword}
-                            className="absolute right-2 top-2.5 text-gray-600 dark:text-gray-300"
+                            className="cursor-pointer absolute right-2 top-2.5 text-gray-600 dark:text-gray-300"
                             tabIndex={-1}
                         >
                             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -107,7 +110,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="w-full py-2.5 px-4 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition"
+                        className="cursor-pointer w-full py-2.5 px-4 text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 rounded-lg dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800 transition"
                     >
                         {isSubmitting ? "Logging in..." : "Log in"}
                     </button>
