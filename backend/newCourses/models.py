@@ -9,14 +9,15 @@ class Course(models.Model):
     date=models.DateField()
     description=models.TextField(max_length=100)
     instructor=models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name="instructor")
+    no_of_modules=models.IntegerField(blank=False)
     def __str__(self):
         return self.course_name
     
 class Module(models.Model):
     course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="modules")
-    module_name=models.CharField(max_length=50)
-    description=models.CharField(max_length=100,blank=True)
-    order=models.PositiveIntegerField(default=0)
+    module_name=models.CharField(max_length=50,blank=False)
+    videos=models.FileField(upload_to=r"videos/")
+    order=models.PositiveIntegerField(default=0,blank=False)
     class Meta:
         ordering=['order']
     

@@ -18,7 +18,7 @@ class CustomAdminSite(AdminSite):
 
     def has_permission(self, request):
         return super().has_permission(request) and request.user.role=="admin"
-    # this will allow only those users which have 'is_staff' and 'is_active' set as true while creating users and role is set as 'admin'
+    # this will allow only those users which have 'is_staff' and 'is_active' set as true and role as 'admin'
 
 custom_admin_site=CustomAdminSite(name='custom_admin')
 
@@ -27,12 +27,16 @@ custom_admin_site=CustomAdminSite(name='custom_admin')
 class UserAdmin(UserAdmin):
     create_form=UserCreationForm
     form=UserChangeForm
-    list_display=('first_name','last_name','email','role','phone_no')
+    list_display=('id','first_name','last_name','email','role','phone_no')
     list_filter=('role',)
     model=CustomUser
 
-    fieldsets=((None,{'fields':('first_name','last_name','role','password','phone_no')}),)
+    fieldsets=((None,{'fields':('first_name','last_name','email','role','password','phone_no')}),)
+    # This defines the layout of fields shown when editing an existing user in the Django admin
+
     add_fieldsets=((None,{'fields':('first_name','last_name','email','role','password1','password2','phone_no'),}),)
+    # This is used when creating a new user in the Django admin
+    # It can differ from fieldsets to allow for extra logic like password confirmation.
 
     search_fields=('email','first_name','last_name')
     ordering=('first_name',)

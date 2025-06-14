@@ -10,7 +10,6 @@ class CustomUser(AbstractUser):
         ("admin","ADMIN")
         ]
     username=None
-    serial_number = models.PositiveIntegerField(unique=True, editable=False, null=True, blank=True)
     email=models.EmailField(trans('email address'),unique=True)
     # _('email address') or trans('email address') translates the field in set system language
     # e.g. in french email address heading will become "adresse e-mail"
@@ -27,11 +26,5 @@ class CustomUser(AbstractUser):
     class Meta:
         app_label='userRegister'
 
-    def save(self, *args, **kwargs):
-            if self.serial_number is None:
-                last_serial = CustomUser.objects.aggregate(max=models.Max("serial_number"))["max"] or 0
-                self.serial_number = last_serial + 1
-            super().save(*args, **kwargs)
-
     def __str__(self):
-        return f"{self.serial_number}-{self.get_full_name()} - {self.email}"
+        return f"{self.id}-{self.get_full_name()} - {self.email}-{self.role}"
