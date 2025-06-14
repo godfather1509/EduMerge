@@ -7,7 +7,7 @@ User=get_user_model()
 
 class ModuleLine(admin.TabularInline):
     model=Module
-    extra=2
+    extra=1
 
 class CourseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

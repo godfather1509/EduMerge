@@ -9,7 +9,7 @@ class ModuleSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
-    modules=ModelSerializer(many=True)
+    modules=ModuleSerializer(many=True)
     class Meta:
         model = Course
         fields = ["course_name", "date", "description", "instructor", "no_of_modules","modules"]
