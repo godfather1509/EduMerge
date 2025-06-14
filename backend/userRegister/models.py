@@ -3,26 +3,6 @@ from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as trans
 from .manager import CustomUserManager
 
-class Course(models.Model):
-    course_name=models.CharField(max_length=50)
-    date=models.DateField()
-    description=models.TextField(max_length=100)
-    instructor=models.CharField(max_length=50)
-    def __str__(self):
-        return self.course_name
-    
-class Modules(models.Model):
-    course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="modules")
-    module_name=models.CharField(max_length=50)
-    description=models.CharField(max_length=100,blank=True)
-    order=models.PositiveIntegerField(default=0)
-    class Meta:
-        ordering=['order']
-    
-    def __str__(self):
-        return f"{self.order}.{self.module_name}"
-    
-
 class CustomUser(AbstractUser):
     ROLE_CHOICE=[
         ("student","STUDENT"),
@@ -30,6 +10,7 @@ class CustomUser(AbstractUser):
         ("admin","ADMIN")
         ]
     username=None
+    serial_number = models.PositiveIntegerField(unique=True, editable=False, null=True, blank=True)
     email=models.EmailField(trans('email address'),unique=True)
     # _('email address') or trans('email address') translates the field in set system language
     # e.g. in french email address heading will become "adresse e-mail"
@@ -46,5 +27,11 @@ class CustomUser(AbstractUser):
     class Meta:
         app_label='userRegister'
 
+    def save(self, *args, **kwargs):
+            if self.serial_number is None:
+                last_serial = CustomUser.objects.aggregate(max=models.Max("serial_number"))["max"] or 0
+                self.serial_number = last_serial + 1
+            super().save(*args, **kwargs)
+
     def __str__(self):
-        return "{}".format(self.first_name)
+        return f"{self.serial_number}-{self.get_full_name()} - {self.email}"

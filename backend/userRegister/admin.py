@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course,Modules,CustomUser
+from .models import CustomUser
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserChangeForm,UserCreationForm
 
@@ -22,13 +22,7 @@ class CustomAdminSite(AdminSite):
 
 custom_admin_site=CustomAdminSite(name='custom_admin')
 
-class ModuleLine(admin.TabularInline):
-    model=Modules
-    extra=2
 
-class CoursesVariety(admin.ModelAdmin):
-    list_display=('course_name','date','instructor')
-    inlines=[ModuleLine]
 
 class UserAdmin(UserAdmin):
     create_form=UserCreationForm
@@ -44,7 +38,6 @@ class UserAdmin(UserAdmin):
     ordering=('first_name',)
 
 
-custom_admin_site.register(Course,CoursesVariety)
 custom_admin_site.register(CustomUser,UserAdmin)
 custom_admin_site.register(Group,GroupAdmin)
 custom_admin_site.register(Token)

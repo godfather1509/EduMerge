@@ -42,12 +42,8 @@ class Login(APIView):
             refresh = RefreshToken.for_user(user)
             if user_details.role == "admin":
                 return Response(
-                    {
-                        "role": user_details.role,
-                        "refresh": str(refresh),
-                        "access": str(refresh.access_token),
-                    },
-                    status=status.HTTP_200_OK,
+                    {"message": "Not Autherized", "errors": serializer.errors},
+                    status=status.HTTP_401_UNAUTHORIZED,
                 )
             return Response(
                 {

@@ -3,7 +3,7 @@ import { useState, useContext } from 'react'
 import { Eye, EyeOff } from "lucide-react";
 import api from '../api/baseusrl'
 import { Link, useNavigate } from 'react-router-dom'
-import LoginContext from "../LoginContext";
+import LoginContext from "../contexts/LoginContext";
 
 
 const Login = () => {
@@ -20,18 +20,9 @@ const Login = () => {
             const response = await api.post('/auth/login/', newLogin)
             console.log(response.data["refresh"])
             userLogin.setLogIn(true)
-            localStorage.setItem('user',true)
-            if (response.data["role"] === "admin") {
-                console.log(response.data["role"])
-                const DJNAGO_ADMIN_URL = import.meta.env.VITE_DJANGO_ADMIN_URL
-                // importing usr from .env file
-                window.location.href = DJNAGO_ADMIN_URL
-                // redirecting to admin page if user is admin
-            }
-            else {
-                console.log(response.data["role"])
-                navigate("/")
-            }
+            localStorage.setItem('user','true')
+            userLogin.setRole(response.data["role"])
+            navigate("/")
         } catch (error) {
             console.log(error.response.data)
             console.log(error.response.status)

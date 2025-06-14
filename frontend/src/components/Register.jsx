@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form"
 import { useState,useContext } from 'react'
 import api from '../api/baseusrl'
 import { useNavigate } from 'react-router-dom'
-import LoginContext from "../LoginContext"
+import LoginContext from "../contexts/LoginContext"
 
 
 const Register = ({ role }) => {
@@ -16,8 +16,7 @@ const Register = ({ role }) => {
   const handelPost = async (newRegister) => {
     try {
       const response = await api.post('/auth/register/', newRegister)
-      userLogin.setLogIn(true)
-      setTimeout(() => { navigate("/login") }, 0)
+      navigate("/login")
     } catch (error) {
       console.log(error.response.data)
       console.log(error.response.status)

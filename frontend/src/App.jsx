@@ -1,4 +1,4 @@
-import { useState, createContext,useEffect } from 'react'
+import { useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
 import Register from './components/Register'
@@ -7,23 +7,22 @@ import NotFound from './components/NotFound'
 import Home from './components/Home'
 import About from './components/About'
 import Login from './components/Login'
+import ProtectedRoutes from './components/ProtectedRoutes'
 import Dashboard from './components/NavbarComponents/Dashboard'
 import Profile from './components/NavbarComponents/Profile'
-import ProtectedRoutes from './components/ProtectedRoutes'
-import LoginContext from './LoginContext'
+import NewCourse from './components/NavbarComponents/NewCourse'
+import Downloads from './components/NavbarComponents/Downloads'
+import LoginContext from './contexts/LoginContext'
 
 
 function App() {
 
-  const [isLogIn, setLogIn] = useState(false)
+  const [isLogIn, setLogIn] = useState(() => {
+    const logedIn = localStorage.getItem('user')
+    return logedIn === 'true';
+  })
 
-  useEffect(()=>{
-    const logedIn=localStorage.getItem('user')
-    if(logedIn){
-      setLogIn(true)
-    }
-  },[])
-
+  const [role, setRole] = useState("")
 
   const router = createBrowserRouter(
 
@@ -85,6 +84,24 @@ function App() {
         </>
       },
       {
+        path: "/newCourse",
+        element: <>
+          <Navbar />
+          <ProtectedRoutes>
+            <NewCourse />
+          </ProtectedRoutes>
+        </>
+      },
+      {
+        path: "/downloads",
+        element: <>
+          <Navbar />
+          <ProtectedRoutes>
+            <Downloads />
+          </ProtectedRoutes>
+        </>
+      },
+      {
         path: "*",
         element: <>
           <Navbar />
@@ -96,7 +113,7 @@ function App() {
 
   return (
     <>
-      <LoginContext.Provider value={{ isLogIn, setLogIn }}>
+      <LoginContext.Provider value={{ isLogIn, setLogIn, role, setRole }}>
         <RouterProvider router={router} />
       </LoginContext.Provider>
     </>
