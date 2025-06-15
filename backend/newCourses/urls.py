@@ -7,5 +7,4 @@ router.register(r'create_course',Course_creation,basename='create_course')
 
 urlpatterns = [
     path('',include(router.urls))
-
 ]

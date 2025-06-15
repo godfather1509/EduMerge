@@ -20,7 +20,7 @@ const Login = () => {
             const response = await api.post('/auth/login/', newLogin)
             console.log(response.data["refresh"])
             userLogin.setLogIn(true)
-            localStorage.setItem('user','true')
+            sessionStorage.setItem('user','true')
             userLogin.setRole(response.data["role"])
             navigate("/")
         } catch (error) {

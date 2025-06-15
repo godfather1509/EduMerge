@@ -1,11 +1,13 @@
-from rest_framework.serializers import Serializer, FileField, ModelSerializer
+from rest_framework.serializers import ModelSerializer
 from .models import Course, Module
+from django.contrib.auth import get_user_model
 
+User=get_user_model()
 
 class ModuleSerializer(ModelSerializer):
     class Meta:
         model = Module
-        fields = ["module_name", "videos", "order"]
+        fields = ["module_name", "video_url", "order"]
 
 
 class CourseSerializer(ModelSerializer):

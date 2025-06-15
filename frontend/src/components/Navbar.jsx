@@ -10,7 +10,7 @@ const Navbar = () => {
 
     const LogOut = () => {
         isLoggedIn.setLogIn(false)
-        localStorage.clear()
+        sessionStorage.clear()
         navigate("/login")
     }
 

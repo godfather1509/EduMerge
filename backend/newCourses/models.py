@@ -16,7 +16,7 @@ class Course(models.Model):
 class Module(models.Model):
     course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="modules")
     module_name=models.CharField(max_length=50,blank=False)
-    videos=models.FileField(upload_to=r"videos/")
+    video_url=models.CharField(max_length=1000,blank=False)
     order=models.PositiveIntegerField(default=0,blank=False)
     class Meta:
         ordering=['order']

@@ -18,7 +18,7 @@ import LoginContext from './contexts/LoginContext'
 function App() {
 
   const [isLogIn, setLogIn] = useState(() => {
-    const logedIn = localStorage.getItem('user')
+    const logedIn = sessionStorage.getItem('user')
     return logedIn === 'true';
   })
 
