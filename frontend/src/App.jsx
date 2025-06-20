@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './App.css'
 import Register from './components/Register'
@@ -18,12 +18,17 @@ import LoginContext from './contexts/LoginContext'
 
 function App() {
 
+  const userLogin = useContext(LoginContext)
+
   const [isLogIn, setLogIn] = useState(() => {
     const logedIn = sessionStorage.getItem('user')
     return logedIn === 'true';
   })
 
-  const [role, setRole] = useState("")
+  const [role, setRole] = useState(() => {
+    return sessionStorage.getItem('role')
+  })
+  const [access, setAccess] = useState("")
 
   const router = createBrowserRouter(
 
@@ -120,7 +125,7 @@ function App() {
 
   return (
     <>
-      <LoginContext.Provider value={{ isLogIn, setLogIn, role, setRole }}>
+      <LoginContext.Provider value={{ isLogIn, setLogIn, role, setRole, access, setAccess }}>
         <RouterProvider router={router} />
       </LoginContext.Provider>
     </>

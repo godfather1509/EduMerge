@@ -42,7 +42,7 @@ const NewCourse = () => {
         for (const item of moduleFiles) {
             const params = {
                 Bucket: S3_Bucket,
-                Key: item.moduleName,
+                Key: item.moduleName + "-"+item.courseName,
                 Body: item.file
             }
             try {
@@ -65,12 +65,13 @@ const NewCourse = () => {
         let moduleFiles = []
         const totalModules = parseInt(data.no_of_modules)
         for (let i = 0; i < totalModules; i++) {
+            const courseName = data.course_name
             const fileField = data[`course_file_${i}`]
             const file = fileField[0]
             const moduleName = data[`module_name_${i}`]
             const order = data[`order_${i}`]
             moduleFiles.push({
-                moduleName, order, file
+                courseName, moduleName, order, file
             })
         }
         return moduleFiles;
@@ -117,8 +118,13 @@ const NewCourse = () => {
 
     const handelPost = async (newCourse) => {
         try {
-            const response = await api.post('/upload/create_course/', newCourse);
-            navigate("/newCourse")
+            const response = await api.post('/upload/create_course/', newCourse, {
+                headers: {
+                    Authorization: `Bearer ${sessionStorage.getItem('access')}`
+                }
+            }
+            );
+            navigate("/")
         } catch (error) {
             console.log(error.response.data)
             console.log(error.response.status)
@@ -150,9 +156,14 @@ const NewCourse = () => {
     }, [noOfModules]);
 
     useEffect(() => {
+        console.log("Access token:", sessionStorage.getItem('access'))
         const fetchInstructors = async () => {
             try {
-                const res = await api.get("/instructors"); // Replace with your API endpoint
+                const res = await api.get("/instructors", {
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('access')}`
+                    }
+                });
                 const data = res.data;
                 setInstructors(data);
             } catch (error) {

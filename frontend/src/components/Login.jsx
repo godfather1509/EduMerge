@@ -13,14 +13,14 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
     const userLogin = useContext(LoginContext)
 
-    const togglePassword = () => setShowPassword(prev => !prev);
-
     const handelPost = async (newLogin) => {
         try {
             const response = await api.post('/auth/login/', newLogin)
-            console.log(response.data["refresh"])
+            sessionStorage.setItem('access', response.data["access"])
             userLogin.setLogIn(true)
             sessionStorage.setItem('user', 'true')
+            sessionStorage.setItem('role', response.data["role"])
+            // session storage is like dictionary we assign value to key
             userLogin.setRole(response.data["role"])
             navigate("/")
         } catch (error) {
@@ -30,6 +30,9 @@ const Login = () => {
             userLogin.setLogIn(false)
         }
     }
+
+    const togglePassword = () => setShowPassword(prev => !prev);
+
 
     return (
         <>

@@ -31,10 +31,10 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "userRegister",
     "newCourses",
-    "corsheaders", # include 'corsheaders' to enable frontend to send api request
+    "corsheaders",  # include 'corsheaders' to enable frontend to send api request
 ]
 
-AUTH_USER_MODEL = "userRegister.CustomUser" # register custom user
+AUTH_USER_MODEL = "userRegister.CustomUser"  # register custom user
 # need to be used when making changes to user table
 
 AUTHENTICATION_BACKENDS = [
@@ -89,8 +89,12 @@ WSGI_APPLICATION = "contentAggregator.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "EDUMERGE",
+        "USER": "root",
+        "PASSWORD": "root",
+        "HOST": "Krishna",
+        "PORT": "3306",
     }
 }
 
