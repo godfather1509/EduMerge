@@ -15,3 +15,10 @@ class CourseSerializer(ModelSerializer):
     class Meta:
         model = Course
         fields = ["course_name", "date", "description", "instructor", "no_of_modules","modules"]
+
+    def create(self, validated_data):
+        modules_data=validated_data.pop("modules")
+        course=Course.objects.create(**validated_data)
+        for data in modules_data:
+            module=Module.objects.create(course=course,**data)
+        return course

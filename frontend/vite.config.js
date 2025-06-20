@@ -8,5 +8,10 @@ export default defineConfig({
   plugins: [react(), tailwindcss(), flowbiteReact()],
   define: {
     global: 'window',
+    /*
+    enable this to use AWS S3 bucket from frontend using 
+    import AWS from 'aws-sdk'
+    import S3 from 'aws-sdk/clients/s3'
+    */
   },
 })
