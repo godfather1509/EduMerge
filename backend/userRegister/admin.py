@@ -28,14 +28,14 @@ class UserAdmin(UserAdmin):
 # used to register custom user model on admin dashboard
     create_form=UserCreationForm
     form=UserChangeForm
-    list_display=('id','first_name','last_name','email','role','phone_no') # display these fields in table
+    list_display=('id','first_name','last_name','email','role','qualification') # display these fields in table
     list_filter=('role',) # filter users on the basis of role
     model=CustomUser
 
-    fieldsets=((None,{'fields':('first_name','last_name','email','role','password','phone_no')}),)
+    fieldsets=((None,{'fields':('first_name','last_name','email','role','password','qualification')}),)
     # This defines the layout of fields shown when editing an existing user in the Django admin
 
-    add_fieldsets=((None,{'fields':('first_name','last_name','email','role','password1','password2','phone_no'),}),)
+    add_fieldsets=((None,{'fields':('first_name','last_name','email','role','password1','password2','qualification'),}),)
     # This is used when creating a new user in the Django admin
     # It differs from fieldsets to allow for extra logic like password confirmation.
 

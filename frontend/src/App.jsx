@@ -9,8 +9,8 @@ import About from './components/About'
 import Login from './components/Login'
 import ForgotPassword from './components/ForgotPassword'
 import ProtectedRoutes from './components/ProtectedRoutes'
-import Dashboard from './components/NavbarComponents/Dashboard'
-import Profile from './components/NavbarComponents/Profile'
+import Bookmark from './components/NavbarComponents/Bookmark'
+import MyCourses from './components/NavbarComponents/MyCourses'
 import NewCourse from './components/NavbarComponents/NewCourse'
 import Downloads from './components/NavbarComponents/Downloads'
 import LoginContext from './contexts/LoginContext'
@@ -76,22 +76,22 @@ function App() {
         </>
       },
       {
-        path: "/dashboard",
+        path: "/bookmark",
         element: <>
           <Navbar />
           <ProtectedRoutes>
             {/* used to prevent access control issue
             user should not be able to access by typing url in search bar */}
-            <Dashboard />
+            <Bookmark />
           </ProtectedRoutes>
         </>
       },
       {
-        path: "/profile",
+        path: "/myCourse",
         element: <>
           <Navbar />
           <ProtectedRoutes>
-            <Profile />
+            <MyCourses />
           </ProtectedRoutes>
         </>
       },

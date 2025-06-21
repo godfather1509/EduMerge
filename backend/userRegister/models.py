@@ -15,11 +15,11 @@ class CustomUser(AbstractUser):
     # e.g. in french email address heading will become "adresse e-mail"
     first_name=models.CharField(max_length=20,blank=True)
     last_name=models.CharField(max_length=20,blank=True)
-    phone_no=models.CharField(max_length=13,blank=True)
+    qualification=models.CharField(max_length=20,blank=True)
     role=models.CharField(max_length=20,choices=ROLE_CHOICE,blank=True)
     
     USERNAME_FIELD='email'
-    REQUIRED_FIELDS=['first_name','last_name','role','phone_no']
+    REQUIRED_FIELDS=['first_name','last_name','role','qualification']
     # though these fields have blank=True while running createsuperuser command program will prompt us to enter these 
     # though it will be skipable
     objects=CustomUserManager()
@@ -28,4 +28,4 @@ class CustomUser(AbstractUser):
         # associated with userRegister app
 
     def __str__(self):
-        return f"{self.id}-{self.get_full_name()} - {self.email}-{self.role}"
+        return f"{self.id}-{self.get_full_name()}-{self.email}-{self.role}"

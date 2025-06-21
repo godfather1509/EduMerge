@@ -10,7 +10,7 @@ class CustomUserManager(BaseUserManager):
         first_name=extra.pop('first_name',"")
         last_name=extra.pop('last_name',"")
         role=extra.pop('role')
-        phone_no=extra.pop('phone_no',"")
+        qualification=extra.pop('qualification',"")
         if role not in ROLE_CHOICE:
             raise ValueError(f"Incorrect Role choose from {','.join(ROLE_CHOICE)}")
         if role=="admin":
@@ -23,7 +23,7 @@ class CustomUserManager(BaseUserManager):
                         first_name=first_name,
                         last_name=last_name,
                         role=role,
-                        phone_no=phone_no,
+                        qualification=qualification,
                         **extra)
         user.set_password(password)
         user.save()
@@ -34,7 +34,7 @@ class CustomUserManager(BaseUserManager):
         extra.setdefault('is_staff',True)
         extra.setdefault('is_active',True)
         extra.setdefault('is_superuser',True)
-        extra.setdefault('phone_no',"00000")
+        extra.setdefault('qualification',"admin")
         extra.pop('role')
         extra['role'] = "admin"
         return self.create_user(email,password,**extra)

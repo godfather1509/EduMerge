@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form"
-import { useState,useContext } from 'react'
+import { useState, useContext } from 'react'
 import api from '../api/baseusrl'
 import { useNavigate } from 'react-router-dom'
 import LoginContext from "../contexts/LoginContext"
@@ -11,7 +11,7 @@ const Register = ({ role }) => {
   const { register, handleSubmit, watch, formState: { errors, isSubmitting } } = useForm()
   const password = watch("password")
 
-  const userLogin=useContext(LoginContext)
+  const userLogin = useContext(LoginContext)
 
   const handelPost = async (newRegister) => {
     try {
@@ -84,15 +84,15 @@ const Register = ({ role }) => {
 
           <div className="relative z-0 w-full mb-5 group">
             <input
-              {...register("phone_no", {
+              {...register("qualification", {
                 required: "Phone no is required",
               })}
-              type="tel"
+              type="text"
               id="floating_phone"
               className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-              placeholder="Phone number (123-456-7890)"
+              placeholder="Qualification (e.g B.TECH)"
             />
-            {errors.phone_no && <p className="text-red-600 text-sm mt-1">{errors.phone_no.message}</p>}
+            {errors.qualification && <p className="text-red-600 text-sm mt-1">{errors.qualification.message}</p>}
           </div>
           <button type="submit" disabled={isSubmitting} className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
             {isSubmitting ? "Signing up..." : "Sign up"}

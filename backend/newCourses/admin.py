@@ -14,7 +14,7 @@ class CourseAdmin(admin.ModelAdmin):
         if db_field.name=="instructor":
             kwargs["queryset"]=User.objects.filter(role="instructor")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    list_display=('course_name','date','instructor',"no_of_modules")
+    list_display=('id','course_name','date','instructor',"no_of_modules")
     inlines=[ModuleLine]
 
 custom_admin_site.register(Course,CourseAdmin)

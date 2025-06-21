@@ -1,17 +1,31 @@
 import { useState, useContext } from "react";
 import LoginContext from "../contexts/LoginContext";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { data, Link, NavLink, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const navigate = useNavigate()
-
+    const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
     const isLoggedIn = useContext(LoginContext)
+    const [error, setError] = useState(null)
 
     const LogOut = () => {
         isLoggedIn.setLogIn(false)
         sessionStorage.clear()
         navigate("/login")
+    }
+
+    const handlePost = async (search) => {
+        console.log(search)
+        // try {
+        //     const response = await api.post('', search)
+        // } catch (error) {
+        //     console.log(error.response.data)
+        //     console.log(error.response.status)
+        //     setError(error.response?.data || { message: "Search failed" });
+        //     userLogin.setLogIn(false)
+        // }
     }
 
     return (
@@ -24,7 +38,11 @@ const Navbar = () => {
                 </NavLink>
 
                 {/* Search Bar (centered relative to container) */}
-                <form className="flex items-center w-[550px] mx-auto">
+                <form className="flex items-center w-[550px] mx-auto"
+                    onSubmit={
+                        handleSubmit((data) => {
+                            handlePost(data)
+                        })}>
                     <label htmlFor="simple-search" className="sr-only">Search</label>
                     <div className="relative w-full">
                         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
@@ -32,7 +50,11 @@ const Navbar = () => {
                                 <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5v10M3 5a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm0 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm12 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm0 0V6a3 3 0 0 0-3-3H9m1.5-2-2 2 2 2" />
                             </svg>
                         </div>
-                        <input type="text" id="simple-search" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search Courses" required />
+                        <input
+                            {...register("search", { required: "Enter search" })}
+                            type="text"
+                            id="simple-search"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white" placeholder="Search Courses" required />
                     </div>
                     <button type="submit" className="cursor-pointer p-2.5 ms-2 text-sm font-medium text-white bg-blue-700 rounded-lg border border-blue-700 hover:bg-blue-800">
                         <svg className="w-4 h-4" fill="none" viewBox="0 0 20 20">
@@ -40,6 +62,12 @@ const Navbar = () => {
                         </svg>
                         <span className="sr-only">Search</span>
                     </button>
+                    {errors.search && (
+                        <p className="text-red-600 text-sm mt-1">{errors.search.message}</p>
+                    )}
+                    {error?.message && (
+                        <p className="text-red-600 text-sm mt-1">{error.message}</p>
+                    )}
                 </form>
 
                 {/* Desktop Nav */}
@@ -74,8 +102,8 @@ const Navbar = () => {
                                             {isLoggedIn.role === "instructor" ? (
                                                 <>
                                                     <li>
-                                                        <NavLink to="/dashboard" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                            Dashboard
+                                                        <NavLink to="/myCourse" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            My Courses
                                                         </NavLink>
                                                     </li>
                                                     <li>
@@ -87,8 +115,8 @@ const Navbar = () => {
                                             ) : (
                                                 <>
                                                     <li>
-                                                        <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                                                            My Profile
+                                                        <NavLink to="/bookmark" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            Bookmarks
                                                         </NavLink>
                                                     </li>
                                                     <li>

@@ -11,7 +11,7 @@ class Course(models.Model):
     instructor=models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name="instructor")
     no_of_modules=models.IntegerField(blank=False)
     def __str__(self):
-        return self.course_name
+        return f"{self.id}-{self.course_name}"
     
 class Module(models.Model):
     course=models.ForeignKey(Course,on_delete=models.CASCADE,related_name="modules")
