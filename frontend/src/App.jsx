@@ -115,7 +115,8 @@ function App() {
         </>
       },
       {
-        path: "/course/:id",
+        path: "/course/:id/:moduleId?",
+        // ? makes that particular parameter optional
         element: <>
           <Navbar />
           <ProtectedRoutes>

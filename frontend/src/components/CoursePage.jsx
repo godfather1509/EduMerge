@@ -1,11 +1,14 @@
 import api from '../api/baseusrl'
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
 const CoursePage = () => {
-    const { id } = useParams();
+    let { id,moduleId } = useParams();
     const [course, setCourse] = useState(null);
+    moduleId=moduleId||0;
+    const navigate = useNavigate()
+
 
     // const updateEnrolled = async () => {
     //     const newEnrolled = course[0].total_enrolled + 1;
@@ -47,6 +50,10 @@ const CoursePage = () => {
         if (id) getCourse(); // Only fetch if id exists
     }, [id]);
 
+    const handleClick=(index)=>{
+        navigate(`/course/${id}/${index}`)
+    }
+
     return (
         <>
             {course ? (
@@ -60,7 +67,8 @@ const CoursePage = () => {
                                 {/* Video */}
                                 <div className="relative pb-[56.25%] rounded-lg overflow-hidden shadow-lg">
                                     <ReactPlayer
-                                        url="https://www.youtube.com/watch?v=3BS4dOBQvIY" // replace with actual video URL
+                                        // url="https://www.youtube.com/watch?v=3BS4dOBQvIY" // replace with actual video URL
+                                        url={`https://d1x8az5e7se65g.cloudfront.net/${course[0].modules[moduleId]['video_url']}`}
                                         controls
                                         pip
                                         width="100%"
@@ -119,8 +127,9 @@ const CoursePage = () => {
                                     <button
                                         key={index}
                                         className="cursor-pointer text-left text-black px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
+                                        onClick={()=>{handleClick(index)}}
                                     >
-                                        {module.module_name}
+                                        {index + 1}. {module.module_name}
                                     </button>
                                 ))}
                             </div>
