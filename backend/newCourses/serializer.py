@@ -6,6 +6,7 @@ User = get_user_model()
 
 
 class ModuleSerializer(ModelSerializer):
+    # gets modules specific to a course
     class Meta:
         model = Module
         fields = ["module_name", "video_url", "order"]
@@ -18,6 +19,7 @@ class InstructorSerializer(ModelSerializer):
 
 
 class CourseSerializer(ModelSerializer):
+    # saves the course
     modules = ModuleSerializer(many=True)
 
     # many=True indicates there are going to be multiple instances of this class
@@ -41,16 +43,19 @@ class CourseSerializer(ModelSerializer):
 
 
 class GetAllCoursesSerializer(ModelSerializer):
+    # gets all courses from serializer
     instructor = InstructorSerializer(read_only=True)
     modules = ModuleSerializer(many=True)
 
     class Meta:
         model = Course
         fields = [
+            "id",
             "course_name",
             "date",
             "description",
             "instructor",
             "no_of_modules",
             "modules",
+            "total_enrolled",
         ]

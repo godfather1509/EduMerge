@@ -1,18 +1,15 @@
 import { useState, useEffect } from 'react';
 import api from "../../api/baseusrl";
+import { useNavigate } from 'react-router-dom';
 
 const MyCourses = () => {
     const [courses, setCourses] = useState([]);
-
-    const getCourse = async (data) => {
-        console.log(data)
-    }
-
+    const navigate = useNavigate()
     useEffect(() => {
         const fetchCourses = async () => {
             const instructor = sessionStorage.getItem('instructor')
             try {
-                const res = await api.get("/upload/courses/", {
+                const res = await api.get("/upload/my_courses/", {
                     params: {
                         course_instructor: instructor
                     },
@@ -22,7 +19,7 @@ const MyCourses = () => {
                     }
                 });
                 const data = res.data;
-                // console.log(data)
+                console.log(data)
                 setCourses(data);
             } catch (error) {
                 console.error("Failed to load courses:", error);
@@ -40,10 +37,13 @@ const MyCourses = () => {
                     <button
                         key={index}
                         className="text-left cursor-pointer bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg shadow hover:shadow-md p-4 transition duration-200"
-                        onClick={() => { getCourse(course) }}
+                        onClick={() => { navigate(`/course/${course.id}`) }}
                     >
                         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{course['course_name']}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
+                            Id: {course['id']}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
                             Date: {course['date']}
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -54,6 +54,9 @@ const MyCourses = () => {
                         </p>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Modules: {course.no_of_modules}
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Enrolled: {course['total_enrolled']}
                         </p>
                     </button>
                 ))

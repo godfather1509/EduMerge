@@ -13,6 +13,7 @@ import Bookmark from './components/NavbarComponents/Bookmark'
 import MyCourses from './components/NavbarComponents/MyCourses'
 import NewCourse from './components/NavbarComponents/NewCourse'
 import Downloads from './components/NavbarComponents/Downloads'
+import CoursePage from './components/CoursePage'
 import LoginContext from './contexts/LoginContext'
 
 
@@ -110,6 +111,15 @@ function App() {
           <Navbar />
           <ProtectedRoutes>
             <Downloads />
+          </ProtectedRoutes>
+        </>
+      },
+      {
+        path: "/course/:id",
+        element: <>
+          <Navbar />
+          <ProtectedRoutes>
+            <CoursePage />
           </ProtectedRoutes>
         </>
       },

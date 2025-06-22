@@ -10,6 +10,7 @@ class Course(models.Model):
     description=models.TextField(max_length=100)
     instructor=models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name="instructor")
     no_of_modules=models.IntegerField(blank=False)
+    total_enrolled=models.IntegerField(blank=True)
     def __str__(self):
         return f"{self.id}-{self.course_name}"
     
