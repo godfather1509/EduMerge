@@ -13,7 +13,15 @@ class RegisterUserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "email", "role", "qualification", "password"]
+        fields = [
+            "first_name",
+            "last_name",
+            "email",
+            "role",
+            "qualification",
+            "password",
+            "gender",
+        ]
         extra_kwargs = {
             "password": {"write_only": True},
             "first_name": {"required": True},
@@ -21,6 +29,7 @@ class RegisterUserSerializer(ModelSerializer):
             "email": {"required": True},
             "role": {"required": True},
             "qualification": {"required": True},
+            "gender": {"required": True},
         }
 
     def validate_email(self, value):
@@ -64,6 +73,6 @@ class UpdatePassword(serializers.ModelSerializer):
         # instance is existing database object that we are updating
         password = data.get("password")
         if password:
-            instance.set_password(password) # hashes the password
+            instance.set_password(password)  # hashes the password
         instance.save()
         return instance

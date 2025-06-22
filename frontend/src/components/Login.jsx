@@ -21,6 +21,7 @@ const Login = () => {
             sessionStorage.setItem('user', 'true')
             sessionStorage.setItem('instructor', response.data["instructor"])
             sessionStorage.setItem('role', response.data["role"])
+            sessionStorage.setItem('gender',response.data['gender'])
             // session storage is like dictionary we assign value to key
             userLogin.setRole(response.data["role"])
             navigate("/")

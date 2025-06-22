@@ -42,7 +42,7 @@ const NewCourse = () => {
         for (const item of moduleFiles) {
             const params = {
                 Bucket: S3_Bucket,
-                Key: item.moduleName + "-"+item.courseName,
+                Key: item.moduleName + "-" + item.courseName + "-" + item.instructor,
                 Body: item.file
             }
             try {
@@ -66,12 +66,13 @@ const NewCourse = () => {
         const totalModules = parseInt(data.no_of_modules)
         for (let i = 0; i < totalModules; i++) {
             const courseName = data.course_name
+            const instructor = data.instructor
             const fileField = data[`course_file_${i}`]
             const file = fileField[0]
             const moduleName = data[`module_name_${i}`]
             const order = data[`order_${i}`]
             moduleFiles.push({
-                courseName, moduleName, order, file
+                courseName, instructor, moduleName, order, file
             })
         }
         return moduleFiles;
@@ -124,7 +125,7 @@ const NewCourse = () => {
                 }
             }
             );
-            navigate("/")
+            navigate("/myCourse")
         } catch (error) {
             console.log(error.response.data)
             console.log(error.response.status)
@@ -347,10 +348,10 @@ const NewCourse = () => {
 
                     <button
                         type="submit"
-                        disabled={isSubmitting}
+                        disabled={uploading}
                         className="cursor-pointer text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
-                        {isSubmitting ? "Uploading..." : "Upload"}
+                        {uploading ? "Uploading..." : "Upload"}
                     </button>
                 </form>
                 {uploading && (

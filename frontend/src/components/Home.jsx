@@ -40,9 +40,9 @@ const Home = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Modules: {course.no_of_modules}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                        {/* <p className="text-sm text-gray-600 dark:text-gray-400">
                             Enrolled: {course['total_enrolled']}
-                        </p>
+                        </p> */}
                     </button>
                 ))
             )}

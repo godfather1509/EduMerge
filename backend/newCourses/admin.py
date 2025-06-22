@@ -16,6 +16,9 @@ class CourseAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
     list_display=('id','course_name','date','instructor',"no_of_modules","total_enrolled")
     inlines=[ModuleLine]
+    ordering=('id',)
+    search_fields=('instructor','course_name','date')
+    # list_filter=('date',"total_enrolled",)
 
 custom_admin_site.register(Course,CourseAdmin)
 

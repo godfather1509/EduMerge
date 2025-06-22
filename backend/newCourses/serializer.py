@@ -15,7 +15,7 @@ class ModuleSerializer(ModelSerializer):
 class InstructorSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ["first_name", "last_name", "role", "qualification", "email"]
+        fields = ["first_name", "last_name", "role", "qualification", "email","gender"]
 
 
 class CourseSerializer(ModelSerializer):

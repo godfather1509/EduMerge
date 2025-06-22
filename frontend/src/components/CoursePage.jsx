@@ -36,7 +36,7 @@ const CoursePage = () => {
                 });
 
                 setCourse(response.data); // Store course data
-                // console.log("Fetched course:", response.data);
+                console.log("Fetched course:", response.data);
 
             } catch (error) {
                 console.log(error.response?.data);
@@ -79,10 +79,11 @@ const CoursePage = () => {
                                     <div className="flex items-center gap-3">
                                         <img
                                             src={
-                                                // sessionStorage.getItem("role") === "student"
-                                                //     ? "../student.png"
-                                                //     : 
-                                                "../teacher.jpg"
+                                                course[0].instructor['gender'] === "FEMALE" ||
+                                                    course[0].instructor['gender'] === "Female"
+                                                    ? "../femaleInstructor.avif"
+                                                    :
+                                                    "../maleInstructor.jpg"
                                             }
                                             alt="Instructor"
                                             className="w-10 h-10 rounded-full object-cover"

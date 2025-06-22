@@ -32,7 +32,7 @@ class GetInstructor(APIView):
             data.append(
                 {
                     "id": instructor.id,
-                    "name": f"{instructor.first_name} {instructor.last_name}".strip(),
+                    "name": f"{instructor.get_full_name()}".strip(),
                     "email": f"{instructor.email}",
                 }
             )

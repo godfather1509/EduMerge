@@ -28,19 +28,19 @@ class UserAdmin(UserAdmin):
 # used to register custom user model on admin dashboard
     create_form=UserCreationForm
     form=UserChangeForm
-    list_display=('id','first_name','last_name','email','role','qualification') # display these fields in table
-    list_filter=('role',) # filter users on the basis of role
+    list_display=('id','first_name','last_name','email','role','qualification','gender') # display these fields in table
+    list_filter=('role','gender') # filter users on the basis of role
     model=CustomUser
 
-    fieldsets=((None,{'fields':('first_name','last_name','email','role','password','qualification')}),)
+    fieldsets=((None,{'fields':('first_name','last_name','email','role','password','qualification','gender')}),)
     # This defines the layout of fields shown when editing an existing user in the Django admin
 
-    add_fieldsets=((None,{'fields':('first_name','last_name','email','role','password1','password2','qualification'),}),)
+    add_fieldsets=((None,{'fields':('first_name','last_name','email','role','password1','password2','qualification','gender'),}),)
     # This is used when creating a new user in the Django admin
     # It differs from fieldsets to allow for extra logic like password confirmation.
 
-    search_fields=('email','first_name','last_name') # user can be searched on the basis of these fields
-    ordering=('first_name',) # users will be ordered on the basis of their first name
+    search_fields=('email','first_name','last_name','qualification') # user can be searched on the basis of these fields
+    ordering=('id',) # users will be ordered on the basis of their first name
 
 
 custom_admin_site.register(CustomUser,UserAdmin)

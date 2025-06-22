@@ -11,6 +11,7 @@ class CustomUserManager(BaseUserManager):
         last_name=extra.pop('last_name',"")
         role=extra.pop('role')
         qualification=extra.pop('qualification',"")
+        gender=extra.pop('gender',"")
         if role not in ROLE_CHOICE:
             raise ValueError(f"Incorrect Role choose from {','.join(ROLE_CHOICE)}")
         if role=="admin":
@@ -24,6 +25,7 @@ class CustomUserManager(BaseUserManager):
                         last_name=last_name,
                         role=role,
                         qualification=qualification,
+                        gender=gender,
                         **extra)
         user.set_password(password)
         user.save()
