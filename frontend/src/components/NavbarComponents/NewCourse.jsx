@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form"
 import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaTrashAlt } from 'react-icons/fa';
+// AWS configuration
 import AWS from 'aws-sdk'
 import S3 from 'aws-sdk/clients/s3'
 // to use these set "define: {global: 'window'}" in "vite.config.js"
@@ -25,11 +26,13 @@ const NewCourse = () => {
     const uploadVideo = async (moduleFiles) => {
 
         setUploading(true)
-        let moduleKeys = []
+        let moduleKeys = [] // maintaining array of aws file keys to store in database
 
         // AWS Configuration
         const S3_Bucket = import.meta.env.VITE_S3_BUCKET
+        // name of S3 bucket
         const REGION = import.meta.env.VITE_REGION
+        // S3 bucket region(server region where data is stored)
         AWS.config.update({
             accessKeyId: import.meta.env.VITE_ACCESS_KEY,
             secretAccessKey: import.meta.env.VITE_SECRET_ACCESS_KEY
@@ -42,18 +45,21 @@ const NewCourse = () => {
         for (const item of moduleFiles) {
             const params = {
                 Bucket: S3_Bucket,
+                // S3 bucket being used
                 Key: item.moduleName + "-" + item.courseName + "-" + item.instructor,
+                // individual aws key of every file
                 Body: item.file
             }
             try {
-                const upload = await s3.putObject(params).on("httpUploadProgress",
-                    (evt) => {
-                        setProgress(parseInt((evt.loaded * 100 / evt.total)) + "%")
-                    }).promise()
-                // alert(`Module ${item.moduleName} uploaded succesfully`)
+                const upload = await s3.putObject(params) // this uploads file to aws server
+                                        .on("httpUploadProgress",
+                                        (evt) => {
+                                            setProgress(parseInt((evt.loaded * 100 / evt.total)) + "%")
+                                        }).promise() // used to track the progress of file upload
                 moduleKeys.push(params.Key);
             } catch (error) {
                 console.error(error)
+                setUploading(false)
                 alert(`Error uploading Module ${item.moduleName}:` + error.message)
             }
         }
@@ -81,7 +87,7 @@ const NewCourse = () => {
     const prepareData = (moduleKeys, data) => {
         const total = parseInt(data.no_of_modules);
 
-        // Build the modules array
+        // modules array to store data of each module
         const modules = [];
 
         for (let i = 0; i < total; i++) {

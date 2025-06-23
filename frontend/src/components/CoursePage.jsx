@@ -68,7 +68,8 @@ const CoursePage = () => {
                                 <div className="relative pb-[56.25%] rounded-lg overflow-hidden shadow-lg">
                                     <ReactPlayer
                                         // url="https://www.youtube.com/watch?v=3BS4dOBQvIY" // replace with actual video URL
-                                        url={`https://d1x8az5e7se65g.cloudfront.net/${course[0].modules[moduleId]['video_url']}`}
+                                        url={`${import.meta.env.VITE_CLOUDFRONT_URL}/${course[0].modules[moduleId]['video_url']}`}
+                                        // cloudfront url/aws key of each file
                                         controls
                                         pip
                                         width="100%"
