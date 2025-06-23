@@ -14,7 +14,7 @@ class CourseAdmin(admin.ModelAdmin):
         if db_field.name=="instructor":
             kwargs["queryset"]=User.objects.filter(role="instructor")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    list_display=('id','course_name','date','instructor',"no_of_modules","total_enrolled")
+    list_display=('id','course_name','date','instructor',"no_of_modules")
     inlines=[ModuleLine]
     ordering=('id',)
     search_fields=('instructor','course_name','date')

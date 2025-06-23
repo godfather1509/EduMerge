@@ -21,6 +21,8 @@ class RegisterUserSerializer(ModelSerializer):
             "qualification",
             "password",
             "gender",
+            "course_name_bookmark",
+            "bookmark_url",
         ]
         extra_kwargs = {
             "password": {"write_only": True},

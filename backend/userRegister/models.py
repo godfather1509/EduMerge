@@ -18,6 +18,8 @@ class CustomUser(AbstractUser):
     qualification=models.CharField(max_length=20,blank=True)
     role=models.CharField(max_length=20,choices=ROLE_CHOICE,blank=True)
     gender=models.CharField(max_length=10,blank=False)
+    course_name_bookmark=models.CharField(max_length=50,blank=True,null=True)
+    bookmark_url=models.CharField(max_length=200,blank=True,null=True)
     
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['first_name','last_name','role','qualification','gender']

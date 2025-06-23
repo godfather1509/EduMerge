@@ -71,7 +71,9 @@ const CoursePage = () => {
                                         url={`${import.meta.env.VITE_CLOUDFRONT_URL}/${course[0].modules[moduleId]['video_url']}`}
                                         // cloudfront url/aws key of each file
                                         controls
+                                        // adds play/pause functionality
                                         pip
+                                        // enables picture in picture
                                         width="100%"
                                         height="100%"
                                         className="absolute top-0 left-0"

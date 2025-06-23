@@ -57,5 +57,4 @@ class GetAllCoursesSerializer(ModelSerializer):
             "instructor",
             "no_of_modules",
             "modules",
-            "total_enrolled",
         ]
