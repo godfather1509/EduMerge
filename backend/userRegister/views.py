@@ -9,7 +9,6 @@ from .serializer import (
     RegisterUserSerializer,
     LoginSerializer,
     VerifyEmailSerializer,
-    UpdatePassword,
 )
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -57,8 +56,9 @@ class Login(APIView):
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
                     "role": user_details.role,
-                    "instructor":user_details.id,
-                    "gender":user_details.gender
+                    "instructor": user_details.id,
+                    "gender": user_details.gender,
+                    "email": user_details.email,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -97,16 +97,31 @@ class Verify_email(APIView):
 
     def patch(self, request):
         data = request.data
-        user=get_object_or_404(User,email=data["email"])
-        serializer = UpdatePassword(user, data=data, partial=True)
+        user = get_object_or_404(User, email=data["email"])
+        serializer = RegisterUserSerializer(user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({
-                        "message":"Password updated succesfully",
-                        "data":serializer.data
-                        },
-                            status=status.HTTP_200_OK)
+            return Response(
+                {"message": "Password updated succesfully", "data": serializer.data},
+                status=status.HTTP_200_OK,
+            )
         return Response(serializer.errors)
+
+
+class Bookmark(APIView):
+
+    def patch(self, request):
+        data = request.data
+        user = get_object_or_404(User, email=data["email"])
+        serializer = RegisterUserSerializer(user, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Course Bookmarked succesfully", "data": serializer.data},
+                status=status.HTTP_200_OK,
+            )
+        return Response(serializer.errors)
+
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])

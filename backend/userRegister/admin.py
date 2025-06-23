@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CustomUser
+from .models import CustomUser,Bookmark
 from django.contrib.auth.admin import UserAdmin
 from .forms import UserChangeForm, UserCreationForm
 
@@ -26,8 +26,16 @@ class CustomAdminSite(AdminSite):
 custom_admin_site = CustomAdminSite(name="custom_admin")
 
 
+
+class BookmarkAdmin(admin.TabularInline):
+    model=Bookmark
+    extra=1
+
+
+
 class UserAdmin(UserAdmin):
     # used to register custom user model on admin dashboard
+    model = CustomUser
     create_form = UserCreationForm
     form = UserChangeForm
     list_display = (
@@ -40,7 +48,7 @@ class UserAdmin(UserAdmin):
         "gender",
     )  # display these fields in table
     list_filter = ("role", "gender")  # filter users on the basis of role
-    model = CustomUser
+    inlines=[BookmarkAdmin]
 
     fieldsets = (
         (
@@ -54,8 +62,6 @@ class UserAdmin(UserAdmin):
                     "password",
                     "qualification",
                     "gender",
-                    "course_name_bookmark",
-                    "bookmark_url",
                 )
             },
         ),
@@ -75,8 +81,6 @@ class UserAdmin(UserAdmin):
                     "password2",
                     "qualification",
                     "gender",
-                    "course_name_bookmark",
-                    "bookmark_url",
                 ),
             },
         ),

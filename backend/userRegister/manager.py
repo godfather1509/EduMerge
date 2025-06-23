@@ -14,8 +14,6 @@ class CustomUserManager(BaseUserManager):
         role = extra.pop("role")
         qualification = extra.pop("qualification", "")
         gender = extra.pop("gender", "")
-        course_name_bookmark = extra.pop("course_name_bookmark", "")
-        bookmark_url = extra.pop("bookmark_url", "")
         if role not in ROLE_CHOICE:
             raise ValueError(f"Incorrect Role choose from {','.join(ROLE_CHOICE)}")
         if role == "admin":
@@ -31,8 +29,6 @@ class CustomUserManager(BaseUserManager):
             role=role,
             qualification=qualification,
             gender=gender,
-            course_name_bookmark=course_name_bookmark,
-            bookmark_url=bookmark_url,
             **extra,
         )
         user.set_password(password)

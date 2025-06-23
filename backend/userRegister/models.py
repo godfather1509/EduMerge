@@ -17,9 +17,7 @@ class CustomUser(AbstractUser):
     last_name=models.CharField(max_length=20,blank=True)
     qualification=models.CharField(max_length=20,blank=True)
     role=models.CharField(max_length=20,choices=ROLE_CHOICE,blank=True)
-    gender=models.CharField(max_length=10,blank=False)
-    course_name_bookmark=models.CharField(max_length=50,blank=True,null=True)
-    bookmark_url=models.CharField(max_length=200,blank=True,null=True)
+    gender=models.CharField(max_length=10,blank=False)    
     
     USERNAME_FIELD='email'
     REQUIRED_FIELDS=['first_name','last_name','role','qualification','gender']
@@ -32,3 +30,9 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.id}-{self.get_full_name()}-{self.email}-{self.role}"
+    
+
+class Bookmark(models.Model):
+    user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,null=True,related_name="user_bookmark")
+    course_name_bookmark=models.CharField(max_length=50,blank=True,null=True)
+    bookmark_url=models.URLField(blank=True,null=True)

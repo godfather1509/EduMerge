@@ -6,25 +6,30 @@ import ReactPlayer from 'react-player';
 const CoursePage = () => {
     let { id,moduleId } = useParams();
     const [course, setCourse] = useState(null);
+    const[bookmark,setBookmark]=useState(false)
     moduleId=moduleId||0;
     const navigate = useNavigate()
 
 
-    // const updateEnrolled = async () => {
-    //     const newEnrolled = course[0].total_enrolled + 1;
-    //     console.log(course)
-    //     console.log(newEnrolled)
-    //     try {
-    //         const response = await api.patch(`/upload/enroll/${id}/`, {
-    //             total_enrolled: newEnrolled
-    //         });
-    //         setCourse(response.data); // Store course data
-    //         console.log("Fetched course:", response.data);
-    //     } catch (error) {
-    //         console.log(error.response?.data);
-    //         console.log(error.response?.status);
-    //     }
-    // }
+    const courseBookmark = async () => {
+        // console.log(sessionStorage.getItem('email'))
+        const bookmark={
+            role:sessionStorage.getItem('role'),
+            email:sessionStorage.getItem('email'),
+            course_name_bookmark:course[0].course_name+"-"+course[0].instructor.first_name+" "+course[0].instructor.last_name,
+            bookmark_url:`/course/${id}`
+        }
+        // console.log(bookmark)
+        try {
+            const response = await api.patch(`/auth/bookmark/`,bookmark);
+            console.log(response.data);
+            setBookmark(true)
+        } catch (error) {
+            console.log(error.response?.data);
+            console.log(error.response?.status);
+            setBookmark(false)
+        }
+    }
 
     useEffect(() => {
         const getCourse = async () => {
@@ -39,7 +44,7 @@ const CoursePage = () => {
                 });
 
                 setCourse(response.data); // Store course data
-                console.log("Fetched course:", response.data);
+                // console.log("Fetched course:", response.data);
 
             } catch (error) {
                 console.log(error.response?.data);
@@ -109,12 +114,12 @@ const CoursePage = () => {
                                         </div>
                                     </div>
 
-                                    {/* Enroll Button */}
-                                    {/* {sessionStorage.getItem("role") === "student" && (
-                                        <button className="bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-700 transition" onClick={updateEnrolled}>
-                                            Enroll
+                                    {/* Bookmark Button */}
+                                    {sessionStorage.getItem("role") === "student" && (
+                                        <button className="cursor-pointer bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-700 transition" onClick={courseBookmark}>
+                                            {bookmark ? "Bookmarked" : "Bookmark"}
                                         </button>
-                                    )} */}
+                                    )}
                                 </div>
 
                                 {/* Description */}

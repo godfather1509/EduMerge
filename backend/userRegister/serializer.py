@@ -1,8 +1,15 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth import get_user_model
+from .models import Bookmark
 
 User = get_user_model()
+
+
+class BookmarkSerializer(ModelSerializer):
+    class Meta:
+        model = Bookmark
+        fields = ["course_name_bookmark", "bookmark_url"]
 
 
 class RegisterUserSerializer(ModelSerializer):
@@ -10,6 +17,7 @@ class RegisterUserSerializer(ModelSerializer):
     email = serializers.EmailField(required=True)
     role = serializers.CharField(required=True)
     # this overides DRF's own model validator with serializer's custom validator
+    bookmark = BookmarkSerializer()
 
     class Meta:
         model = User
@@ -21,8 +29,7 @@ class RegisterUserSerializer(ModelSerializer):
             "qualification",
             "password",
             "gender",
-            "course_name_bookmark",
-            "bookmark_url",
+            "bookmark",
         ]
         extra_kwargs = {
             "password": {"write_only": True},
@@ -54,6 +61,27 @@ class RegisterUserSerializer(ModelSerializer):
         )
         return user
 
+    # def update(self, instance, data):
+    #     # instance is existing database object that we are updating
+
+    #     bookmark = data.pop("bookmark", None)
+    #     instance.first_name = data.get("first_name", instance.first_name)
+    #     instance.last_name = data.get("last_name", instance.last_name)
+    #     instance.email = data.get("email", instance.email)
+    #     instance.role = data.get("role", instance.role)
+    #     instance.qualification = data.get("qualification", instance.qualification)
+    #     instance.gender = data.get("gender", instance.gender)
+    #     password = data.get("password", instance.password)
+    #     if password:
+    #         instance.set_password(password)  # hashes the password
+    #     instance.save()
+
+    #     if bookmark:
+    #         instance.bookmark.course_name_bookmark = data.get("course_name_bookmark")
+    #         instance.bookmark.bookmark_url = data.get("bookmark_url")
+    #         instance.bookmark.save()
+    #     return instance
+
 
 class LoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -62,19 +90,3 @@ class LoginSerializer(serializers.Serializer):
 
 class VerifyEmailSerializer(serializers.Serializer):
     email = serializers.EmailField()
-
-
-class UpdatePassword(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
-
-    class Meta:
-        model = User
-        fields = ["password"]
-
-    def update(self, instance, data):
-        # instance is existing database object that we are updating
-        password = data.get("password")
-        if password:
-            instance.set_password(password)  # hashes the password
-        instance.save()
-        return instance

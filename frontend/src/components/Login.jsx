@@ -17,13 +17,14 @@ const Login = () => {
         try {
             const response = await api.post('/auth/login/', newLogin)
             sessionStorage.setItem('access', response.data["access"])
-            userLogin.setLogIn(true)
-            sessionStorage.setItem('user', 'true')
             sessionStorage.setItem('instructor', response.data["instructor"])
             sessionStorage.setItem('role', response.data["role"])
             sessionStorage.setItem('gender',response.data['gender'])
+            sessionStorage.setItem('email',response.data['email'])
+            sessionStorage.setItem('user', 'true')
             // session storage is like dictionary we assign value to key
             userLogin.setRole(response.data["role"])
+            userLogin.setLogIn(true)
             navigate("/")
         } catch (error) {
             console.log(error.response.data)
