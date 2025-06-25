@@ -26,6 +26,7 @@ const CoursePage = () => {
                 email: sessionStorage.getItem('email'),
                 bookmark: [{
                     course_name_bookmark: bookmarkName,
+                    bookmark_url: `/course/${id}`
                 }]
             }
             try {
@@ -110,6 +111,12 @@ const CoursePage = () => {
         if (id) getCourse(); // Only fetch if id exists
     }, [id]);
 
+    useEffect(
+        () => {
+            sessionStorage.setItem('bookmarks', JSON.stringify(bookmarkData))
+        }, [bookmarkData]
+    )
+
     const handleClick = (index) => {
         navigate(`/course/${id}/${index}`)
     }
@@ -127,7 +134,6 @@ const CoursePage = () => {
                                 {/* Video */}
                                 <div className="relative pb-[56.25%] rounded-lg overflow-hidden shadow-lg">
                                     <ReactPlayer
-                                        // url="https://www.youtube.com/watch?v=3BS4dOBQvIY" // replace with actual video URL
                                         url={`${import.meta.env.VITE_CLOUDFRONT_URL}/${course[0].modules[moduleId]['video_url']}`}
                                         // cloudfront url/aws key of each file
                                         controls
@@ -171,7 +177,11 @@ const CoursePage = () => {
 
                                     {/* Bookmark Button */}
                                     {sessionStorage.getItem("role") === "student" && (
-                                        <button className="cursor-pointer bg-red-600 text-white font-semibold px-4 py-2 rounded hover:bg-red-700 transition" onClick={courseBookmark}>
+                                        <button
+                                            className={`cursor-pointer text-white font-semibold px-4 py-2 rounded transition ${bookmark ? "bg-gray-500 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
+                                                }`}
+                                            onClick={courseBookmark}
+                                        >
                                             {bookmark ? "Bookmarked" : "Bookmark"}
                                         </button>
                                     )}

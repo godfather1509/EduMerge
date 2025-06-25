@@ -11,6 +11,7 @@ class BookmarkSerializer(ModelSerializer):
         model = Bookmark
         fields = [
             "course_name_bookmark",
+            "bookmark_url"
         ]
 
 
