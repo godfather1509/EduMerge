@@ -26,7 +26,11 @@ const CoursePage = () => {
                 email: sessionStorage.getItem('email'),
                 bookmark: [{
                     course_name_bookmark: bookmarkName,
-                    bookmark_url: `/course/${id}`
+                    bookmark_url: `/course/${id}`,
+                    course_name:course[0].course_name,
+                    instructor_name: course[0].instructor.first_name + " " + course[0].instructor.last_name,
+                    instructor_email:course[0].instructor.email,
+                    instructor_qualification:course[0].instructor.qualification
                 }]
             }
             try {

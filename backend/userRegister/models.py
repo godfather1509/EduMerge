@@ -36,5 +36,9 @@ class Bookmark(models.Model):
     user=models.ForeignKey(CustomUser,on_delete=models.CASCADE,null=True,related_name="user_bookmark")
     course_name_bookmark=models.CharField(max_length=50,blank=True,null=True)
     bookmark_url=models.CharField(max_length=200,blank=True,null=True)
+    course_name=models.CharField(max_length=50,blank=True,null=True)
+    instructor_name=models.CharField(max_length=50,blank=True,null=True)
+    instructor_email=models.CharField(max_length=50,blank=True,null=True)
+    instructor_qualification=models.CharField(max_length=50,blank=True,null=True)
     def __str__(self):
         return f"{self.id}-{self.course_name_bookmark}"
