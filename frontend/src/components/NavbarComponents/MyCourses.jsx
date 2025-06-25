@@ -7,7 +7,7 @@ const MyCourses = () => {
     const navigate = useNavigate()
     useEffect(() => {
         const fetchCourses = async () => {
-            const instructor = sessionStorage.getItem('instructor')
+            const instructor = sessionStorage.getItem('userId')
             try {
                 const res = await api.get("/upload/my_courses/", {
                     params: {
@@ -19,7 +19,7 @@ const MyCourses = () => {
                     }
                 });
                 const data = res.data;
-                console.log(data)
+                // console.log(data)
                 setCourses(data);
             } catch (error) {
                 console.error("Failed to load courses:", error);
@@ -49,9 +49,7 @@ const MyCourses = () => {
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Instructor: {course.instructor['first_name'] + " " + course.instructor['last_name'] + " " + "(" + course.instructor['qualification'] + ")"}
                         </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                            email: {course.instructor['email']}
-                        </p>
+                        
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                             Modules: {course.no_of_modules}
                         </p>

@@ -1,61 +1,116 @@
+/*
+This page has logic of bookmarking and unbookmarking a course, playing course videos from AWS cloudfront and navigating to other course modules
+*/
+
 import api from '../api/baseusrl'
 import { useEffect, useState } from 'react';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
 const CoursePage = () => {
-    let { id,moduleId } = useParams();
+    let { id, moduleId } = useParams();
     const [course, setCourse] = useState(null);
-    const[bookmark,setBookmark]=useState(false)
-    moduleId=moduleId||0;
+    const [bookmark, setBookmark] = useState(false)
+    const [bookmarkData, setBookmarkData] = useState([])
+
+    moduleId = moduleId || 0;
     const navigate = useNavigate()
 
 
     const courseBookmark = async () => {
-        // console.log(sessionStorage.getItem('email'))
-        const bookmark={
-            role:sessionStorage.getItem('role'),
-            email:sessionStorage.getItem('email'),
-            course_name_bookmark:course[0].course_name+"-"+course[0].instructor.first_name+" "+course[0].instructor.last_name,
-            bookmark_url:`/course/${id}`
+        const bookmarkName = course[0].course_name + "-" + course[0].instructor.first_name + " " + course[0].instructor.last_name
+        // if course is not bookmarked
+        if (bookmark === false) {
+            // bookmark the course
+            const newBookmark = {
+                email: sessionStorage.getItem('email'),
+                bookmark: [{
+                    course_name_bookmark: bookmarkName,
+                }]
+            }
+            try {
+                const response = await api.patch(`/auth/bookmark/`, newBookmark);
+                console.log(response.data);
+                setBookmark(true)
+                setBookmarkData(prev => [...prev, { course_name_bookmark: bookmarkName }]);
+            } catch (error) {
+                console.log(error.response?.data);
+                console.log(error.response?.status);
+                setBookmark(false)
+            }
         }
-        // console.log(bookmark)
-        try {
-            const response = await api.patch(`/auth/bookmark/`,bookmark);
-            console.log(response.data);
-            setBookmark(true)
-        } catch (error) {
-            console.log(error.response?.data);
-            console.log(error.response?.status);
-            setBookmark(false)
+        // if course is bookmarked already
+        else {
+            // un bookmark the course
+            try {
+                const response = await api.delete(`/auth/bookmark/`, { data: { bookmarkName } })
+                console.log("Course Removed", response)
+                setBookmark(false)
+                setBookmarkData(prev =>
+                    prev.filter(b => b.course_name_bookmark !== bookmarkName)
+                );
+            } catch (error) {
+                console.log(error.response?.data);
+                console.log(error.response?.status);
+            }
         }
     }
 
+    useEffect(
+        // get and set all bookmarks
+        () => {
+            const bookmarks = JSON.parse(sessionStorage.getItem('bookmarks')) // name of course bookmarked in database
+            setBookmarkData(bookmarks)
+        }, []
+    )
+
     useEffect(() => {
+
+        if (!course) return;
+
+        const bookmarkName = `${course[0].course_name}-${course[0].instructor.first_name} ${course[0].instructor.last_name}`;
+
+        let isBookmarked = undefined;
+        for (let i = 0; i < bookmarkData.length; i++) {
+            if (bookmarkData[i].course_name_bookmark === bookmarkName) {
+                // match to see if bookmark present in backend matches bookmark name here
+                isBookmarked = bookmarkData[i];
+                break; // Stop the loop once we find a match
+            }
+        }
+
+        if (isBookmarked === undefined) {
+            setBookmark(false)
+        }
+        else {
+            setBookmark(true)
+        }
+    }, [course, bookmarkData]); // will only run if bookmarkData and course are present
+
+    useEffect(() => {
+        // get the course info from database
         const getCourse = async () => {
             try {
                 const response = await api.get("/upload/course/", {
                     params: {
                         course: id
                     },
-                    // headers: {
-                    //     Authorization: `Bearer ${sessionStorage.getItem('access')}`
-                    // }
+                    headers: {
+                        Authorization: `Bearer ${sessionStorage.getItem('access')}`
+                    }
                 });
 
                 setCourse(response.data); // Store course data
                 // console.log("Fetched course:", response.data);
-
             } catch (error) {
                 console.log(error.response?.data);
                 console.log(error.response?.status);
             }
         };
-
         if (id) getCourse(); // Only fetch if id exists
     }, [id]);
 
-    const handleClick=(index)=>{
+    const handleClick = (index) => {
         navigate(`/course/${id}/${index}`)
     }
 
@@ -135,7 +190,7 @@ const CoursePage = () => {
                                     <button
                                         key={index}
                                         className="cursor-pointer text-left text-black px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 transition"
-                                        onClick={()=>{handleClick(index)}}
+                                        onClick={() => { handleClick(index) }}
                                     >
                                         {index + 1}. {module.module_name}
                                     </button>

@@ -9,10 +9,13 @@ from .serializer import (
     RegisterUserSerializer,
     LoginSerializer,
     VerifyEmailSerializer,
+    BookmarkSerializer,
+    UpdatePassword,
 )
 from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from .models import Bookmark as bk
 
 User = get_user_model()
 # using 'get_user_model' we don't have to import model from models.py everytime, to use this we need to register our custom user in settings.py
@@ -37,8 +40,16 @@ class Login(APIView):
             if user_details is None:
                 return Response(
                     {"message": "User Does Not Exists", "errors": serializer.errors},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+            if user_details.role == "admin":
+                return Response(
+                    {"message": "Not Autherized", "errors": serializer.errors},
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
+            print(email)
+            print(password)
+            print(user_details.email == email)
             user = authenticate(username=email, password=password)
             if user is None:
                 return Response(
@@ -46,19 +57,18 @@ class Login(APIView):
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
             refresh = RefreshToken.for_user(user)
-            if user_details.role == "admin":
-                return Response(
-                    {"message": "Not Autherized", "errors": serializer.errors},
-                    status=status.HTTP_401_UNAUTHORIZED,
-                )
+            bookmarks = bk.objects.filter(user=user_details)
+            bookmark_serializer = BookmarkSerializer(bookmarks, many=True).data
             return Response(
                 {
                     "refresh": str(refresh),
                     "access": str(refresh.access_token),
                     "role": user_details.role,
-                    "instructor": user_details.id,
+                    "userId": user_details.id,
                     "gender": user_details.gender,
                     "email": user_details.email,
+                    "name":user_details.get_full_name(),
+                    "bookmarks": bookmark_serializer,
                 },
                 status=status.HTTP_200_OK,
             )
@@ -98,7 +108,7 @@ class Verify_email(APIView):
     def patch(self, request):
         data = request.data
         user = get_object_or_404(User, email=data["email"])
-        serializer = RegisterUserSerializer(user, data=data, partial=True)
+        serializer = UpdatePassword(user, data=data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -114,6 +124,9 @@ class Bookmark(APIView):
         data = request.data
         user = get_object_or_404(User, email=data["email"])
         serializer = RegisterUserSerializer(user, data=data, partial=True)
+        # user has old data(instance in serializer)
+        # data is new data(data in serializer)
+        # partial=True means partial updation of data is allowed
         if serializer.is_valid():
             serializer.save()
             return Response(
@@ -121,6 +134,17 @@ class Bookmark(APIView):
                 status=status.HTTP_200_OK,
             )
         return Response(serializer.errors)
+
+    def delete(self, request):
+        data = request.data
+        obj = bk.objects.get(course_name_bookmark=data["bookmarkName"])
+        if obj:
+            obj.delete()
+            return Response(
+                {"message": "Course Bookmarked succesfully"}, status=status.HTTP_200_OK
+            )
+        else:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(["GET"])

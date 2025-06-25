@@ -1,3 +1,8 @@
+/*
+ This component has logic of creating and uploading new course to MYSQL database and 
+ configures AWS S3 bucket to upload course files to AWS
+*/
+
 import { useForm } from "react-hook-form"
 import { useState, useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -24,7 +29,7 @@ const NewCourse = () => {
     const noOfModules = watch("no_of_modules");
 
     const uploadVideo = async (moduleFiles) => {
-
+        // configures S3 bucket and uploads video files to AWS server
         setUploading(true)
         let moduleKeys = [] // maintaining array of aws file keys to store in database
 
@@ -52,10 +57,10 @@ const NewCourse = () => {
             }
             try {
                 const upload = await s3.putObject(params) // this uploads file to aws server
-                                        .on("httpUploadProgress",
-                                        (evt) => {
-                                            setProgress(parseInt((evt.loaded * 100 / evt.total)) + "%")
-                                        }).promise() // used to track the progress of file upload
+                    .on("httpUploadProgress",
+                        (evt) => {
+                            setProgress(parseInt((evt.loaded * 100 / evt.total)) + "%")
+                        }).promise() // used to track the progress of file upload
                 moduleKeys.push(params.Key);
             } catch (error) {
                 console.error(error)
@@ -68,6 +73,7 @@ const NewCourse = () => {
     }
 
     const prepareModule = (data) => {
+        // prepeares module to send to AWS 
         let moduleFiles = []
         const totalModules = parseInt(data.no_of_modules)
         for (let i = 0; i < totalModules; i++) {
@@ -85,6 +91,7 @@ const NewCourse = () => {
     }
 
     const prepareData = (moduleKeys, data) => {
+        // prepare data to send to database
         const total = parseInt(data.no_of_modules);
 
         // modules array to store data of each module
@@ -106,7 +113,7 @@ const NewCourse = () => {
             course_name: data.course_name,
             date: data.date,
             description: data.description,
-            instructor: data.instructor,
+            instructor: sessionStorage.getItem('userId'),
             no_of_modules: total,
             modules, // reference the modules array
         };
@@ -124,6 +131,7 @@ const NewCourse = () => {
     };
 
     const handelPost = async (newCourse) => {
+        // send meta data related to course to database
         try {
             const response = await api.post('/upload/create_course/', newCourse, {
                 headers: {
@@ -140,6 +148,7 @@ const NewCourse = () => {
     }
 
     const handleDeleteModule = (index) => {
+        // deletes the module
         const updated = [...modules];
         updated.splice(index, 1);
         setModules(updated);
@@ -162,23 +171,24 @@ const NewCourse = () => {
         }
     }, [noOfModules]);
 
-    useEffect(() => {
-        console.log("Access token:", sessionStorage.getItem('access'))
-        const fetchInstructors = async () => {
-            try {
-                const res = await api.get("/instructors", {
-                    headers: {
-                        Authorization: `Bearer ${sessionStorage.getItem('access')}`
-                    }
-                });
-                const data = res.data;
-                setInstructors(data);
-            } catch (error) {
-                console.error("Failed to load instructors:", error);
-            }
-        };
-        fetchInstructors();
-    }, []);
+    // useEffect(() => {
+    //     // gets all the instructors from database
+    //     // console.log("Access token:", sessionStorage.getItem('access'))
+    //     const fetchInstructors = async () => {
+    //         try {
+    //             const res = await api.get("/instructors", {
+    //                 headers: {
+    //                     Authorization: `Bearer ${sessionStorage.getItem('access')}`
+    //                 }
+    //             });
+    //             const data = res.data;
+    //             setInstructors(data);
+    //         } catch (error) {
+    //             console.error("Failed to load instructors:", error);
+    //         }
+    //     };
+    //     fetchInstructors();
+    // }, []);
 
 
     return (
@@ -200,18 +210,6 @@ const NewCourse = () => {
                     </div>
 
                     <div className="relative z-0 w-full mb-5 group">
-                        <input
-                            {...register("date", { required: "Date is required" })}
-                            type="date"
-                            id="date"
-                            placeholder=" "
-                            className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        />
-                        <label htmlFor="date" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Date</label>
-                        {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date.message}</p>}
-                    </div>
-
-                    <div className="relative z-0 w-full mb-5 group">
                         <textarea
                             {...register("description", { required: "Description is required" })}
                             id="description"
@@ -230,38 +228,50 @@ const NewCourse = () => {
                         )}
                     </div>
 
+                    <div className="relative z-0 w-full mb-5 group">
+                        {/* Styled to look like an input field */}
+                        <p className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 dark:text-white dark:border-gray-600 peer">
+                            {sessionStorage.getItem('name')} - {sessionStorage.getItem('email')}
+                        </p>
+
+                        {/* Label like input field */}
+                        <label
+                            className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0]"
+                        >
+                            Instructor
+                        </label>
+
+                        {/* Hidden input for form submission */}
+                        <input
+                            type="hidden"
+                            {...register("instructor", {
+                                required: "Instructor is required",
+                            })}
+                            value={`${sessionStorage.getItem('name')}-${sessionStorage.getItem('email')}`}
+                        />
+
+                        {/* Error message */}
+                        {errors.instructor && (
+                            <p className="text-red-600 text-sm mt-1">{errors.instructor.message}</p>
+                        )}
+                    </div>
+
                     <div className="grid md:grid-cols-2 md:gap-6">
-                        {/* Instructor Field */}
                         <div className="relative z-0 w-full mb-5 group">
-                            <select
-                                {...register("instructor", {
-                                    required: "Please select an instructor",
-                                })}
-                                id="instructor"
-                                defaultValue=""
-                                className="block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                            >
-                                <option value="" disabled hidden className="text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
-                                    Instructor
-                                </option>
-                                {instructors.map((ins) => (
-                                    <option
-                                        key={ins.id}
-                                        value={ins.id}
-                                        className="text-black dark:text-white bg-white dark:bg-gray-800"
-                                    >
-                                        {ins.name} - {ins.email}
-                                    </option>
-                                ))}
-                            </select>
-                            <label
-                                htmlFor="instructor"
-                                className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6"
-                            ></label>
-                            {errors.instructor && (
-                                <p className="text-red-600 text-sm mt-1">{errors.instructor.message}</p>
-                            )}
+                            <input
+                                {...register("date", { required: "Date is required" })}
+                                type="date"
+                                id="date"
+                                placeholder=" "
+                                className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            />
+                            <label htmlFor="date" className="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:start-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">
+                                Date
+                            </label>
+                            {errors.date && <p className="text-red-600 text-sm mt-1">{errors.date.message}</p>}
                         </div>
+
+
 
                         {/* No of Modules Field */}
                         <div className="relative z-0 w-full mb-5 group">

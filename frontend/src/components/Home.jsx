@@ -10,7 +10,6 @@ const Home = () => {
             try {
                 const res = await api.get("/upload/all_courses/");
                 const data = res.data;
-                console.log(data)
                 setCourses(data);
             } catch (error) {
                 console.error("Failed to load courses:", error);

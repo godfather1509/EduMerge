@@ -16,11 +16,14 @@ const Login = () => {
     const handelPost = async (newLogin) => {
         try {
             const response = await api.post('/auth/login/', newLogin)
+            // console.log(response.data)
             sessionStorage.setItem('access', response.data["access"])
-            sessionStorage.setItem('instructor', response.data["instructor"])
+            sessionStorage.setItem('userId', response.data["userId"])
             sessionStorage.setItem('role', response.data["role"])
             sessionStorage.setItem('gender',response.data['gender'])
+            sessionStorage.setItem('name',response.data['name'])
             sessionStorage.setItem('email',response.data['email'])
+            sessionStorage.setItem('bookmarks',JSON.stringify(response.data['bookmarks']))
             sessionStorage.setItem('user', 'true')
             // session storage is like dictionary we assign value to key
             userLogin.setRole(response.data["role"])

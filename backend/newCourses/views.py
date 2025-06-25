@@ -53,12 +53,11 @@ class GetAllCourses(APIView):
             )
         courses = Course.objects.filter(instructor=instructor)
         serializer = GetAllCoursesSerializer(courses, many=True)
-        print(serializer.data)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class GetCourse(APIView):
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         courseId = request.query_params.get("course")
         courseId = int(courseId)
@@ -67,13 +66,3 @@ class GetCourse(APIView):
         course = Course.objects.filter(id=courseId)
         serializer = GetAllCoursesSerializer(course, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# class UpdateEnrollment(APIView):
-#     def patch(self, request, id):
-#         course = Course.objects.get(id=id)
-#         serializer = GetAllCoursesSerializer(course, request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response({"error": "Bad Request"}, status=status.HTTP_400_BAD_REQUEST)
