@@ -50,6 +50,7 @@ class RegisterUserSerializer(ModelSerializer):
 
         if self.instance:
             user_email = user_email.exclude(pk=self.instance.pk)
+        # done so that function does not raise duplicate email error while updating some field in database
 
         if user_email.exists():
             raise serializers.ValidationError("User with same email exists")
