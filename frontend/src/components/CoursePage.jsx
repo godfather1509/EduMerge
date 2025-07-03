@@ -27,10 +27,10 @@ const CoursePage = () => {
                 bookmark: [{
                     course_name_bookmark: bookmarkName,
                     bookmark_url: `/course/${id}`,
-                    course_name:course[0].course_name,
+                    course_name: course[0].course_name,
                     instructor_name: course[0].instructor.first_name + " " + course[0].instructor.last_name,
-                    instructor_email:course[0].instructor.email,
-                    instructor_qualification:course[0].instructor.qualification
+                    instructor_email: course[0].instructor.email,
+                    instructor_qualification: course[0].instructor.qualification
                 }]
             }
             try {
@@ -180,7 +180,7 @@ const CoursePage = () => {
                                     </div>
 
                                     {/* Bookmark Button */}
-                                    {sessionStorage.getItem("role") === "student" && (
+                                    {sessionStorage.getItem("name") !== `${course[0].instructor.first_name} ${course[0].instructor.last_name}` && (
                                         <button
                                             className={`cursor-pointer text-white font-semibold px-4 py-2 rounded transition ${bookmark ? "bg-gray-500 hover:bg-gray-600" : "bg-red-600 hover:bg-red-700"
                                                 }`}

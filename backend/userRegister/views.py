@@ -67,7 +67,7 @@ class Login(APIView):
                     "userId": user_details.id,
                     "gender": user_details.gender,
                     "email": user_details.email,
-                    "name":user_details.get_full_name(),
+                    "name": user_details.get_full_name(),
                     "bookmarks": bookmark_serializer,
                 },
                 status=status.HTTP_200_OK,
@@ -119,6 +119,22 @@ class Verify_email(APIView):
 
 
 class Bookmark(APIView):
+
+    def get(self, request):
+        email = request.query_params.get("email")
+        user = User.objects.get(email=email)
+        # this gives single object from database
+        bookmarks = bk.objects.filter(user=user)
+        # this gives multiple objects from database
+        serializer = BookmarkSerializer(bookmarks, many=True).data
+        if serializer:
+            return Response(
+                {
+                    "bookmarks": serializer,
+                },
+                status=status.HTTP_200_OK,
+            )
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
     def patch(self, request):
         data = request.data

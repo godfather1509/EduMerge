@@ -171,26 +171,6 @@ const NewCourse = () => {
         }
     }, [noOfModules]);
 
-    // useEffect(() => {
-    //     // gets all the instructors from database
-    //     // console.log("Access token:", sessionStorage.getItem('access'))
-    //     const fetchInstructors = async () => {
-    //         try {
-    //             const res = await api.get("/instructors", {
-    //                 headers: {
-    //                     Authorization: `Bearer ${sessionStorage.getItem('access')}`
-    //                 }
-    //             });
-    //             const data = res.data;
-    //             setInstructors(data);
-    //         } catch (error) {
-    //             console.error("Failed to load instructors:", error);
-    //         }
-    //     };
-    //     fetchInstructors();
-    // }, []);
-
-
     return (
         <>
             <div className="mt-5 flex-col flex-grow flex items-center justify-center px-4 mb-8">
