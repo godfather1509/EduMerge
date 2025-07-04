@@ -49,6 +49,8 @@ def scraper():
                 topic_content = topic_element.find_elements(By.CLASS_NAME, "topic-link")
                 topics = ""
                 for topic in topic_content:
+                    if len(topics)==0:
+                        topics=topic.text.strip()
                     topics = topics + ", " + topic.text.strip()
 
                 try:

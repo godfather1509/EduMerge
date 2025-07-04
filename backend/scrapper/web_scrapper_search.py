@@ -44,6 +44,8 @@ def search_scraper(query):
                 topic_content = topic_element.find_elements(By.CLASS_NAME, "topic-link")
                 topics = ""
                 for topic in topic_content:
+                    if len(topics)==0:
+                        topics=topic.text.strip()
                     topics = topics + ", " + topic.text.strip()
                 try:
                     instructor_element = card.find_element(By.CLASS_NAME, "content")

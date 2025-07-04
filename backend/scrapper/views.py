@@ -13,7 +13,7 @@ from pymongo.mongo_client import MongoClient
 
 dotenv.load_dotenv()
 
-class WebScrapper(APIView):
+class WebScraper(APIView):
     def get(self,request):
         uri = f"mongodb+srv://{os.getenv('MONGO_DB_USER')}:{os.getenv('MONGO_DB_PASSWORD')}@cluster0.yni4bb0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 
@@ -32,7 +32,8 @@ class WebScrapper(APIView):
                     
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-class SearchScrapper(APIView):
+class SearchScraper(APIView):
     def get(self,request,query):
-        print(search_scraper(query))
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        data=search_scraper(query)
+        print(data)
+        return Response(data,status=status.HTTP_404_NOT_FOUND)
