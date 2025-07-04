@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .web_scarpper import scrapper
+from .web_scraper import scraper
 from .web_scrapper_search import search_scraper
 import pymongo,dotenv,os
 from pymongo.server_api import ServerApi
@@ -26,14 +26,13 @@ class WebScrapper(APIView):
             print(e)
         dblist = client.list_database_names()
         if "ScrapperDB" not in dblist:
-            print(scrapper())
+            print(scraper())
             print("The database not exists.")
             mydb = client["ScrapperDB"]
                     
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 class SearchScrapper(APIView):
-    def get(self,request):
-        query=request.GET.get('query')
+    def get(self,request,query):
         print(search_scraper(query))
         return Response(status=status.HTTP_404_NOT_FOUND)
