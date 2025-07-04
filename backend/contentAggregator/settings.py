@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
     "userRegister",
+    "scrapper",
     "newCourses",
     "corsheaders",  # include 'corsheaders' to enable frontend to send api request
 ]
