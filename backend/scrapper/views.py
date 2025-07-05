@@ -1,11 +1,7 @@
-from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.views import APIView
-from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, AllowAny
-import pymongo, dotenv, os
+import dotenv, os
 from pymongo.server_api import ServerApi
 from pymongo.mongo_client import MongoClient
 from .youtube_scrape import parse_youtube
@@ -34,6 +30,7 @@ class WebScraper(APIView):
         mytable = mydb["scraped_data"]
 
         if mytable.count_documents({}) == 0:
+            # if database is empty only then below script will run
             data = scraper()
             print("The collection is empty. Inserting data...")
             index = mytable.insert_many(data)

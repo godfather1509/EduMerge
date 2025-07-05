@@ -11,7 +11,7 @@ def scraper():
     options.add_argument("--headless")
     options.add_argument("disable-gpu")
     options.add_argument("--window-size=1920,1080")
-
+    # done this so that chrome window do not open while scraping
     driver = webdriver.Chrome(options=options)
     driver.get("https://ocw.mit.edu/search/?type=course")
 
@@ -43,8 +43,11 @@ def scraper():
         for index, card in enumerate(cards, start=1):
             try:
                 title_element = card.find_element(By.TAG_NAME, "a")
+                # selects a html tag here we have whole html element
                 title = title_element.text.strip()
+                # get text or course title from whole element
                 link = title_element.get_attribute("href")
+                # getting particular atribute from selected tag
                 topic_element = card.find_element(By.CLASS_NAME, "topics-list")
                 topic_content = topic_element.find_elements(By.CLASS_NAME, "topic-link")
                 topics = ""
@@ -60,7 +63,6 @@ def scraper():
                     instructor = "MIT"
                 courses.append(
                     {
-                        "index": index,
                         "title": title,
                         "link": link,
                         "instructor": instructor,
