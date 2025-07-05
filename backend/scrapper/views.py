@@ -13,24 +13,33 @@ from pymongo.mongo_client import MongoClient
 
 dotenv.load_dotenv()
 
+def convert_id(data):
+    # converts Object_id into string
+    for item in data:
+        if "_id" in item:
+            item["_id"]=str(item["_id"])
+    return data
+
 class WebScraper(APIView):
     def get(self,request):
-        uri = f"mongodb+srv://{os.getenv('MONGO_DB_USER')}:{os.getenv('MONGO_DB_PASSWORD')}@cluster0.yni4bb0.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-
+        uri = os.getenv('MONGO_DB_URL')
         # Create a new client and connect to the server
         client = MongoClient(uri, server_api=ServerApi('1'))
-        try:
-            client.admin.command('ping')
-            print("Pinged your deployment. You successfully connected to MongoDB!")
-        except Exception as e:
-            print(e)
-        dblist = client.list_database_names()
-        if "ScrapperDB" not in dblist:
-            print(scraper())
-            print("The database not exists.")
-            mydb = client["ScrapperDB"]
-                    
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        mydb = client["ScrapperDB"] # this will create database if it does not already exists
+        mytable = mydb["scraped_data"]
+
+        if mytable.count_documents({}) == 0:
+            data = scraper()
+            print("The collection is empty. Inserting data...")
+            index = mytable.insert_many(data)
+            return Response(convert_id(data), status=status.HTTP_201_CREATED)  # Use 201 for created
+        else:
+            data=list(mytable.find())
+            # this will give all the data present in database
+            print("Data already exists in the collection.")
+            return Response(convert_id(data), status=status.HTTP_200_OK)
+
+
 
 class SearchScraper(APIView):
     def get(self,request,query):

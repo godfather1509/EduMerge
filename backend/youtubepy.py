@@ -24,7 +24,9 @@ response = request.execute()
 
 # Print results
 for item in response['items']:
+    # print(item)
     title = item['snippet']['title']
     video_id = item['id']['videoId']
+    instructor=item['snippet']['channelTitle']
     url = f"https://www.youtube.com/watch?v={video_id}"
-    print(f"{title}\n{url}\n")
+    print(f"{title}\n{url}\n{instructor}\n")
