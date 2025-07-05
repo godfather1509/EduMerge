@@ -61,7 +61,7 @@ def search_scraper(query):
                         "topics": topics,
                     }
                 )
-                if __name__ == "main":
+                if __name__ == "__main__":
                     print(f"Course {index}:")
                     print(f"Title     : {title}")
                     print(f"Link      : {link}")
@@ -77,6 +77,6 @@ def search_scraper(query):
     return courses
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     query = "Energy"
     search_scraper(query)

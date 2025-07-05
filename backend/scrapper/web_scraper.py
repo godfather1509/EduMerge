@@ -67,7 +67,7 @@ def scraper():
                         "topics": topics,
                     }
                 )
-                if __name__ == "main":
+                if __name__ == "__main__":
                     print(f"Course {index}:")
                     print(f"Title     : {title}")
                     print(f"Link      : {link}")
@@ -83,5 +83,5 @@ def scraper():
     return courses
 
 
-if __name__ == "main":
+if __name__ == "__main__":
     scraper()
