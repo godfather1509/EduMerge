@@ -12,14 +12,11 @@ def parse_youtube(query):
     # Build YouTube API client
     youtube = build("youtube", "v3", developerKey=YOU_TUBE_API_KEY)
 
-    # Search query
-    # query = "python programming course"
-
     # Call the search.list method
     request = youtube.search().list(
         part="snippet", q=query, type="video", maxResults=30
     )
-    # passing part gives us different kind of data about video
+    # part gives us different kind of data about video
 
     response = request.execute()
 

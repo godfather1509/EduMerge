@@ -1,6 +1,8 @@
 import { useForm } from "react-hook-form"
 import { useState, useContext } from 'react'
 import { Eye, EyeOff } from "lucide-react";
+import { FaGithub } from "react-icons/fa";
+import { SiGoogle } from "react-icons/si";
 import api from '../api/baseusrl'
 import { Link, useNavigate } from 'react-router-dom'
 import LoginContext from "../contexts/LoginContext";
@@ -20,10 +22,10 @@ const Login = () => {
             sessionStorage.setItem('access', response.data["access"])
             sessionStorage.setItem('userId', response.data["userId"])
             sessionStorage.setItem('role', response.data["role"])
-            sessionStorage.setItem('gender',response.data['gender'])
-            sessionStorage.setItem('name',response.data['name'])
-            sessionStorage.setItem('email',response.data['email'])
-            sessionStorage.setItem('bookmarks',JSON.stringify(response.data['bookmarks']))
+            sessionStorage.setItem('gender', response.data['gender'])
+            sessionStorage.setItem('name', response.data['name'])
+            sessionStorage.setItem('email', response.data['email'])
+            sessionStorage.setItem('bookmarks', JSON.stringify(response.data['bookmarks']))
             sessionStorage.setItem('user', 'true')
             // session storage is like dictionary we assign value to key
             userLogin.setRole(response.data["role"])
@@ -35,6 +37,14 @@ const Login = () => {
             setError(error.response?.data || { message: "Registration failed" });
             userLogin.setLogIn(false)
         }
+    }
+
+    const handleGoogleLogin = () => {
+        console.log("Login")
+    }
+
+    const handleGithubLogin = () => {
+        console.log("Login")
     }
 
     const togglePassword = () => setShowPassword(prev => !prev);
@@ -53,6 +63,28 @@ const Login = () => {
                     })}
                     className="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg"
                 >
+                    <div className="flex flex-col gap-3 mb-6">
+                        {/* Google Login Button */}
+                        <button
+                            type="button"
+                            onClick={handleGoogleLogin}
+                            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
+                        >
+                            <SiGoogle className="h-5 w-5 text-white" />
+                            Continue with Google
+                        </button>
+
+                        {/* GitHub Login Button */}
+                        <button
+                            type="button"
+                            onClick={handleGithubLogin}
+                            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
+                        >
+                            <FaGithub className="h-5 w-5" />
+                            Continue with GitHub
+                        </button>
+                    </div>
+
                     {/* Email */}
                     <div className="relative z-0 w-full mb-6 group">
                         <input

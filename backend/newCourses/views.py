@@ -15,6 +15,7 @@ User = get_user_model()
 
 
 class Course_creation(ModelViewSet):
+    permission_classes = [IsAuthenticated]
     serializer_class = CourseSerializer
     queryset = Course.objects.all()
 
