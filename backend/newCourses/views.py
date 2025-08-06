@@ -47,8 +47,8 @@ class GetAllCourses(APIView):
 
     # permission_classes = [AllowAny]
     def get(self, request):
-        instructor = request.query_params.get("course_instructor")
-        # to get query from api url
+        instructor = request.query_params.get("course_instructor") # to get query from api url
+        # we use this when requierd query is not in url
         if not instructor:
             return Response(
                 {"error": "Instructor id is requierd"},
