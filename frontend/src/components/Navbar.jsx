@@ -32,9 +32,9 @@ const Navbar = () => {
         <nav className="bg-white shadow-sm border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
             <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 py-4">
                 {/* Logo (Left-aligned) */}
-                <NavLink to="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="https://flowbite.com/docs/images/logo.svg" className="h-8" alt="EduMerge Logo" />
-                    <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">EduMerge</span>
+                <NavLink to="/" className="flex items-center rtl:space-x-reverse">
+                    <img src="../public/logo.png" className="h-12" alt="EduMerge Logo" />
+                    <span className="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">EduMerge</span>
                 </NavLink>
 
                 {/* Search Bar (centered relative to container) */}

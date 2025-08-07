@@ -1,5 +1,8 @@
 from pathlib import Path
 from datetime import timedelta
+import dotenv, os
+
+dotenv.load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,7 +36,20 @@ INSTALLED_APPS = [
     "scrapper",
     "newCourses",
     "corsheaders",  # include 'corsheaders' to enable frontend to send api request
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
 ]
+
+SOCIALACCOUNT_PROVIDERS={
+    'google':{
+        'APP':{
+            'client_id':os.getenv('OAUTH_GOOGLE_CLIENT_ID'),
+            'secret':os.getenv('OAUTH_GOOGLE_SECRET')
+        }
+    }
+}
 
 AUTH_USER_MODEL = "userRegister.CustomUser"  # register custom user
 # need to be used when making changes to user table
@@ -64,6 +80,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    'allauth.account.middleware.AccountMiddleware',
 ]
 
 ROOT_URLCONF = "contentAggregator.urls"

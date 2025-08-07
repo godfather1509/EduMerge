@@ -68,21 +68,21 @@ const Login = () => {
                         <button
                             type="button"
                             onClick={handleGoogleLogin}
-                            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
+                            className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
                         >
                             <SiGoogle className="h-5 w-5 text-white" />
                             Continue with Google
                         </button>
 
-                        {/* GitHub Login Button */}
+                        {/* GitHub Login Button
                         <button
                             type="button"
                             onClick={handleGithubLogin}
-                            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
+                            className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
                         >
                             <FaGithub className="h-5 w-5" />
                             Continue with GitHub
-                        </button>
+                        </button> */}
                     </div>
 
                     {/* Email */}

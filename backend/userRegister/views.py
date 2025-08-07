@@ -47,9 +47,6 @@ class Login(APIView):
                     {"message": "Not Autherized", "errors": serializer.errors},
                     status=status.HTTP_401_UNAUTHORIZED,
                 )
-            print(email)
-            print(password)
-            print(user_details.email == email)
             user = authenticate(username=email, password=password)
             if user is None:
                 return Response(
@@ -75,6 +72,14 @@ class Login(APIView):
         return Response(
             {"error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST
         )
+
+class Oauth_Handler(APIView):
+
+    def post(self,request):
+
+        print(request)
+
+        pass
 
 
 class Verify_email(APIView):
@@ -161,9 +166,3 @@ class Bookmark(APIView):
             )
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(["GET"])
-@permission_classes([IsAuthenticated])
-def protected_view(request):
-    return Response({"message": "You have access!"})
