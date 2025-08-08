@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { SiGoogle } from "react-icons/si";
 import LoginContext from "../contexts/LoginContext"
 import api from '../api/baseusrl'
 
@@ -24,13 +25,55 @@ const Register = ({ role }) => {
     }
   }
 
+  const handleGoogleLogin = () => {
+    const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
+    const REDIRECT_URI = 'auth/google/callback/'
+
+    const scope = [
+      'https://www.googleapis.com/auth/userinfo.email',
+      'https://www.googleapis.com/auth/userinfo.profile'
+    ].join(' ');
+
+    const params = {
+      response_type: 'code',
+      client_id: import.meta.env.VITE_CLIENT_ID,
+      redirect_uri: `${import.meta.env.VITE_DJANGO_BASE_URL}/${REDIRECT_URI}`,
+      prompt: 'select_account',
+      access_type: 'offline',
+      scope
+    }
+
+    const urlParams = new URLSearchParams(params).toString()
+    window.location = `${GOOGLE_AUTH_URL}?${urlParams}`
+  }
+
   return (
     <>
-      <div className="mt-35 flex-col flex-grow flex items-center justify-center px-4">
+      <div className="mt-15 flex-col flex-grow flex items-center justify-center px-4">
         <h1 className="text-3xl font-bold text-center mb-6">
           {role.charAt(0).toUpperCase() + role.slice(1)} Sign up
         </h1>
-        <form onSubmit={handleSubmit((data) => { handelPost({ ...data, role }) })} className="max-w-md mx-auto">
+        <div className="w-full max-w-md">
+          <div className="flex flex-col gap-3">
+            {/* Google Sign Up */}
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5 px-3 text-sm font-medium text-white bg-gray-700 border border-gray-600 rounded-md hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
+            >
+              <SiGoogle className="h-4 w-4 text-white" />
+              Continue with Google
+            </button>
+          </div>
+          {/* Divider */}
+          <div className="flex items-center justify-center my-6">
+            <span className="border-t border-gray-300 dark:border-gray-600 flex-grow mr-3"></span>
+            <span className="text-gray-500 text-sm dark:text-gray-400">Or sign up with email</span>
+            <span className="border-t border-gray-300 dark:border-gray-600 flex-grow ml-3"></span>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit((data) => { handelPost({ ...data, role }) })} className="w-full max-w-md mx-auto">
           <div className="grid md:grid-cols-2 md:gap-6">
 
             <div className="relative z-0 w-full mb-5 group">
@@ -102,7 +145,7 @@ const Register = ({ role }) => {
                 })}
                 id="gender"
                 defaultValue=""
-                className="block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className="cursor-pointer block py-2.5 px-0 w-full text-sm text-gray-900 dark:text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
               >
                 <option value="" disabled hidden className="text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800">
                   Gender

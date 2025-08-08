@@ -5,6 +5,8 @@ from django.contrib.auth import authenticate
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import logout
+from django.http import HttpResponse
 from .serializer import (
     RegisterUserSerializer,
     LoginSerializer,
@@ -75,11 +77,16 @@ class Login(APIView):
 
 class Oauth_Handler(APIView):
 
-    def post(self,request):
+    def get(self,request):
+        print(request.GET)
+        print(request.GET['code'])
 
-        print(request)
-
-        pass
+        return Response(
+            {
+                "message":request.GET,
+            },
+            status=status.HTTP_200_OK
+        )
 
 
 class Verify_email(APIView):
@@ -166,3 +173,10 @@ class Bookmark(APIView):
             )
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+class LogOut(APIView):
+
+    def get(self, request):
+        logout(request)
+        # this will extract JWT token from sent request and deactivate that token effectively logging out that user
+        return HttpResponse('200')

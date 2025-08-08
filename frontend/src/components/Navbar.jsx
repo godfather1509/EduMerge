@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import LoginContext from "../contexts/LoginContext";
 import { data, Link, NavLink, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const Navbar = () => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -10,8 +11,19 @@ const Navbar = () => {
     const isLoggedIn = useContext(LoginContext)
     const [error, setError] = useState(null)
 
-    const LogOut = () => {
+    const LogOut = async () => {
         isLoggedIn.setLogIn(false)
+        const access_token=sessionStorage.getItem('access')
+        try{
+            const response=await api.get("auth/logout/",{
+                headers:{
+                    Authorization:`Bearer ${access_token}`
+                }
+            })
+        }
+        catch(error){
+            console.log(error)
+        }
         sessionStorage.clear()
         navigate("/login")
     }

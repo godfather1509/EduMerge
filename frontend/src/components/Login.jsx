@@ -40,11 +40,25 @@ const Login = () => {
     }
 
     const handleGoogleLogin = () => {
-        console.log("Login")
-    }
+        const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/auth'
+        const REDIRECT_URI = 'auth/google/callback/'
 
-    const handleGithubLogin = () => {
-        console.log("Login")
+        const scope = [
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile'
+        ].join(' ');
+
+        const params = {
+            response_type: 'code',
+            client_id: import.meta.env.VITE_CLIENT_ID,
+            redirect_uri: `${import.meta.env.VITE_DJANGO_BASE_URL}/${REDIRECT_URI}`,
+            prompt: 'select_account',
+            access_type: 'offline',
+            scope
+        }
+
+        const urlParams = new URLSearchParams(params).toString()
+        window.location = `${GOOGLE_AUTH_URL}?${urlParams}`
     }
 
     const togglePassword = () => setShowPassword(prev => !prev);
@@ -161,7 +175,7 @@ const Login = () => {
                     <p>
                         Don't have an account?{" "}
                         <Link to="/registerStudent" className="text-blue-600 hover:underline dark:text-blue-400">
-                            Sign up
+                            Register
                         </Link>
                     </p>
                     <p>
@@ -173,7 +187,6 @@ const Login = () => {
                 </div>
             </div>
         </>
-
     )
 }
 
