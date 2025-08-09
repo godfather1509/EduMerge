@@ -13,6 +13,7 @@ from .serializer import (
     VerifyEmailSerializer,
     BookmarkSerializer,
     UpdatePassword,
+    OAuthSerializer
 )
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -80,6 +81,13 @@ class Oauth_Handler(APIView):
     def get(self,request):
         print(request.GET)
         print(request.GET['code'])
+
+        serializer=OAuthSerializer(data=request.GET)
+        serializer.is_valid(raise_exception=True)
+
+        valid_data=serializer.validated_data
+
+        # user_data=
 
         return Response(
             {

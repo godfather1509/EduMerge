@@ -117,3 +117,7 @@ class UpdatePassword(serializers.ModelSerializer):
             instance.set_password(password)  # hashes the password
         instance.save()
         return instance
+
+class OAuthSerializer(serializers.Serializer):
+    code=serializers.CharField(required=False)
+    error=serializers.CharField(required=False)
