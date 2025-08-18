@@ -35,7 +35,7 @@ const CoursePage = () => {
             }
             try {
                 const response = await api.patch(`/auth/bookmark/`, newBookmark);
-                console.log(response.data);
+                // console.log(response.data);
                 setBookmark(true)
                 setBookmarkData(prev => [...prev, { course_name_bookmark: bookmarkName }]);
             } catch (error) {
@@ -49,7 +49,7 @@ const CoursePage = () => {
             // un bookmark the course
             try {
                 const response = await api.delete(`/auth/bookmark/`, { data: { bookmarkName } })
-                console.log("Course Removed", response)
+                // console.log("Course Removed", response)
                 setBookmark(false)
                 setBookmarkData(prev =>
                     prev.filter(b => b.course_name_bookmark !== bookmarkName)

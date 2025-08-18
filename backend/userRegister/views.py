@@ -173,11 +173,12 @@ class Bookmark(APIView):
 
     def delete(self, request):
         data = request.data
-        obj = bk.objects.get(course_name_bookmark=data["bookmarkName"])
+        obj = bk.objects.filter(course_name_bookmark=data["bookmarkName"]).first()
+        print(obj)
         if obj:
             obj.delete()
             return Response(
-                {"message": "Course Bookmarked succesfully"}, status=status.HTTP_200_OK
+                {"message": "Bookmark Deleted succesfully"}, status=status.HTTP_200_OK
             )
         else:
             return Response(status=status.HTTP_404_NOT_FOUND)
