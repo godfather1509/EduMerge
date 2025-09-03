@@ -19,6 +19,10 @@ from django.contrib.auth import get_user_model
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import Bookmark as bk
+from .services import get_user_data
+import urllib.parse
+from django.shortcuts import redirect
+
 
 User = get_user_model()
 # using 'get_user_model' we don't have to import model from models.py everytime, to use this we need to register our custom user in settings.py
@@ -79,23 +83,23 @@ class Login(APIView):
 class Oauth_Handler(APIView):
 
     def get(self,request):
-        print(request.GET)
-        print(request.GET['code'])
-
         serializer=OAuthSerializer(data=request.GET)
         serializer.is_valid(raise_exception=True)
 
         valid_data=serializer.validated_data
+        user_data=get_user_data(valid_data)
+        user=User.objects.get(email=user_data['email'])
+        refresh = RefreshToken.for_user(user)
 
-        # user_data=
+        payload={
+            "access_token":refresh.access_token,
+            "referesh_token":refresh,
+            "first_name":user_data['first_name'],
+            "last_name":user_data['last_name']
+        }
 
-        return Response(
-            {
-                "message":request.GET,
-            },
-            status=status.HTTP_200_OK
-        )
-
+        frontend_url=f"http://localhost:5173/callback/?{urllib.parse.urlencode(payload)}"
+        return redirect(frontend_url)
 
 class Verify_email(APIView):
 

@@ -17,10 +17,10 @@ class CustomUser(AbstractUser):
     last_name=models.CharField(max_length=20,blank=True)
     qualification=models.CharField(max_length=20,blank=True)
     role=models.CharField(max_length=20,choices=ROLE_CHOICE,blank=True)
-    gender=models.CharField(max_length=10,blank=False)    
+    gender=models.CharField(max_length=10,blank=True)
     
     USERNAME_FIELD='email'
-    REQUIRED_FIELDS=['first_name','last_name','role','qualification','gender']
+    REQUIRED_FIELDS=[]
     # though these fields have blank=True while running createsuperuser command program will prompt us to enter these 
     # though it will be skipable
     objects=CustomUserManager() # overriding objects class here 

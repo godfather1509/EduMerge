@@ -87,16 +87,6 @@ const Login = () => {
                             <SiGoogle className="h-5 w-5 text-white" />
                             Continue with Google
                         </button>
-
-                        {/* GitHub Login Button
-                        <button
-                            type="button"
-                            onClick={handleGithubLogin}
-                            className="w-full cursor-pointer flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold text-gray-100 bg-gray-700 border border-gray-600 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-0 transition"
-                        >
-                            <FaGithub className="h-5 w-5" />
-                            Continue with GitHub
-                        </button> */}
                     </div>
 
                     {/* Email */}

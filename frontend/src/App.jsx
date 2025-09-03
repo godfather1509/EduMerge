@@ -15,7 +15,7 @@ import NewCourse from './components/NavbarComponents/NewCourse'
 import Downloads from './components/NavbarComponents/Downloads'
 import CoursePage from './components/CoursePage'
 import LoginContext from './contexts/LoginContext'
-
+import Callback from './components/Callback'
 
 function App() {
 
@@ -122,6 +122,12 @@ function App() {
           <ProtectedRoutes>
             <CoursePage />
           </ProtectedRoutes>
+        </>
+      },
+      {
+        path:"/callback",
+        element:<>
+          <Callback/>
         </>
       },
       {
