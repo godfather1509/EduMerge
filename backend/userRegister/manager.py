@@ -11,7 +11,7 @@ class CustomUserManager(BaseUserManager):
         email = self.normalize_email(email).strip()
         first_name = extra.pop("first_name", "")
         last_name = extra.pop("last_name", "")
-        role = extra.pop("role")
+        role = extra.pop("role", "admin")
         qualification = extra.pop("qualification", "")
         gender = extra.pop("gender", "")
         if role not in ROLE_CHOICE:
@@ -41,6 +41,6 @@ class CustomUserManager(BaseUserManager):
         extra.setdefault("is_active", True)
         extra.setdefault("is_superuser", True)
         extra.setdefault("qualification", "admin")
-        extra.pop("role")
         extra["role"] = "admin"
+        extra.pop("role")
         return self.create_user(email, password, **extra)

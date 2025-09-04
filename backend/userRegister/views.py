@@ -13,7 +13,8 @@ from .serializer import (
     VerifyEmailSerializer,
     BookmarkSerializer,
     UpdatePassword,
-    OAuthSerializer
+    OAuthSerializer,
+    UpdateDataSerializer
 )
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -91,12 +92,30 @@ class Oauth_Handler(APIView):
         user=User.objects.get(email=user_data['email'])
         refresh = RefreshToken.for_user(user)
 
-        payload={
+        if all([user.gender, user.qualification, user.role]):
+            bookmarks = bk.objects.filter(user=user)
+            bookmark_serializer = BookmarkSerializer(bookmarks, many=True).data
+            payload={
+            "registered":True,
+            "access_token":refresh.access_token,
+            "referesh_token":refresh,
+            "name":user.get_full_name(),
+            "email":user_data['email'],
+            "gender":user.gender,
+            "role":user.role,
+            "qualification":user.qualification,
+            "user_id":user.id,
+            "bookmarks": bookmark_serializer,
+            }
+        else:
+            payload={
+            "registered":False,
             "access_token":refresh.access_token,
             "referesh_token":refresh,
             "first_name":user_data['first_name'],
-            "last_name":user_data['last_name']
-        }
+            "last_name":user_data['last_name'],
+            "email":user_data['email']
+            }
 
         frontend_url=f"http://localhost:5173/callback/?{urllib.parse.urlencode(payload)}"
         return redirect(frontend_url)
@@ -141,6 +160,32 @@ class Verify_email(APIView):
             )
         return Response(serializer.errors)
 
+
+class UpdateData(APIView):
+    def patch(self, request):
+        data=request.data
+        user=get_object_or_404(User, email=data["email"])
+        serializer=UpdateDataSerializer(user, data=data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            bookmarks = bk.objects.filter(user=user)
+            bookmark_serializer = BookmarkSerializer(bookmarks, many=True).data
+            return Response(
+                {
+                "role": user.role,
+                "userId": user.id,
+                "gender": user.gender,
+                "email": user.email,
+                "name": user.get_full_name(),
+                "bookmarks": bookmark_serializer,
+                },
+                status=status.HTTP_200_OK,
+            )
+        else:
+            print(serializer.errors)
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
 class Bookmark(APIView):
 

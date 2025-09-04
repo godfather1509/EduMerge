@@ -1,21 +1,69 @@
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useEffect } from "react";
+import LoginContext from "../contexts/LoginContext";
+import api from '../api/baseusrl'
 
 function Callback() {
     const [searchParam] = useSearchParams();
+    const navigate = useNavigate();
 
-    const access = searchParam.get("access_token")
-    const refersh = searchParam.get("referesh_token")
+    const registered = searchParam.get('registered')
     const firstName = searchParam.get("first_name")
     const lastName = searchParam.get("last_name")
+    const access = searchParam.get("access_token")
+    const refresh = searchParam.get("referesh_token")
+    const userLogin = useContext(LoginContext)
 
     const [error, setError] = useState(null)
     const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm()
 
-    console.log("Access:", access)
-    console.log("Referesh:", refersh)
+    useEffect(() => {
+        if (registered=="True") {
+            sessionStorage.setItem('access', access)
+            sessionStorage.setItem('refresh', refresh)
+            sessionStorage.setItem('userId', searchParam.get("userId"))
+            sessionStorage.setItem('role', searchParam.get("role"))
+            sessionStorage.setItem('gender', searchParam.get('gender'))
+            sessionStorage.setItem('name', searchParam.get('name'))
+            sessionStorage.setItem('email', searchParam.get('email'))
+            sessionStorage.setItem('bookmarks', JSON.stringify(searchParam.get('bookmarks')))
+            sessionStorage.setItem('user', 'true')
+            userLogin.setRole(searchParam.get("role"))
+            userLogin.setLogIn(true)
+            navigate('/')
+        }
+    }, [registered])
+
+    const handelPatch = async (data) => {
+        const email = searchParam.get("email")
+        data['role'] = data['role'].toLowerCase()
+        data = { ...data, email }
+        console.log(data)
+        try {
+            const response = await api.patch('/auth/update_details/', data)
+            console.log("response:", response.data)
+            sessionStorage.setItem('access', access)
+            sessionStorage.setItem('refresh', refresh)
+            sessionStorage.setItem('userId', response.data["userId"])
+            sessionStorage.setItem('role', response.data["role"])
+            sessionStorage.setItem('gender', response.data['gender'])
+            sessionStorage.setItem('name', response.data['name'])
+            sessionStorage.setItem('email', response.data['email'])
+            sessionStorage.setItem('bookmarks', JSON.stringify(response.data['bookmarks']))
+            sessionStorage.setItem('user', 'true')
+            userLogin.setRole(response.data["role"])
+            userLogin.setLogIn(true)
+            navigate("/")
+        } catch (error) {
+            console.log(error.response.data)
+            console.log(error.response.status)
+            setError(error.response?.data || { message: "Registration failed" });
+            userLogin.setLogIn(false)
+        }
+    }
 
     return (
         <>
@@ -43,7 +91,7 @@ function Callback() {
                     </h1>
                 </div>
 
-                <form onSubmit={handleSubmit((data) => { handelPost({ ...data, role }) })} className="w-full max-w-md mx-auto">
+                <form onSubmit={handleSubmit((data) => { handelPatch(data) })} className="w-full max-w-md mx-auto">
                     <div className="grid md:grid-cols-2 md:gap-6">
 
                         <div className="relative z-0 w-full mb-5 group">

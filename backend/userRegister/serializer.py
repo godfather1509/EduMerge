@@ -118,6 +118,19 @@ class UpdatePassword(serializers.ModelSerializer):
         instance.save()
         return instance
 
+class UpdateDataSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=User
+        fields=["gender", "role", "qualification"]
+    
+    def update(self, instance, validated_data):
+        instance.role=validated_data.get("role")
+        instance.gender=validated_data.get("gender")
+        instance.qualification=validated_data.get("qualification")
+        instance.save()
+        print(instance)
+        return instance
+
 class OAuthSerializer(serializers.Serializer):
     code=serializers.CharField(required=False)
     error=serializers.CharField(required=False)
