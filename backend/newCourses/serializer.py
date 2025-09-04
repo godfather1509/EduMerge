@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from .models import Course, Module
+from .models import Course, Module, Review
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -10,6 +10,11 @@ class ModuleSerializer(ModelSerializer):
     class Meta:
         model = Module
         fields = ["module_name", "video_url", "order"]
+
+class ReviewSerializer(ModelSerializer):
+    class Meta:
+        model=Review
+        fields=["title", "body", "rating"]
 
 
 class InstructorSerializer(ModelSerializer):
@@ -46,6 +51,7 @@ class GetAllCoursesSerializer(ModelSerializer):
     # gets all courses from serializer
     instructor = InstructorSerializer(read_only=True)
     modules = ModuleSerializer(many=True)
+    reviews=ReviewSerializer(many=True)
 
     class Meta:
         model = Course
@@ -57,4 +63,6 @@ class GetAllCoursesSerializer(ModelSerializer):
             "instructor",
             "no_of_modules",
             "modules",
+            "avgRating",
+            "reviews"
         ]

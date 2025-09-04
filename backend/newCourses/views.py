@@ -58,6 +58,10 @@ class GetAllCourses(APIView):
         serializer = GetAllCoursesSerializer(courses, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+class HandelReviews(APIView):
+
+    def post(self, request):
+        pass
 
 class GetCourse(APIView):
     permission_classes = [IsAuthenticated]

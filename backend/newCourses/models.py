@@ -6,6 +6,7 @@ User=get_user_model()
 
 class Course(models.Model):
     course_name=models.CharField(max_length=50)
+    avgRating=models.IntegerField(blank=True, null=True, default=0)
     date=models.DateField()
     description=models.TextField(max_length=100)
     instructor=models.ForeignKey(User,on_delete=models.DO_NOTHING,related_name="instructor")
@@ -23,3 +24,9 @@ class Module(models.Model):
     
     def __str__(self):
         return f"{self.order}.{self.module_name}"
+
+class Review(models.Model):
+    course= models.ForeignKey(Course,on_delete=models.CASCADE, related_name="reviews")
+    title=models.CharField(max_length=50, blank=False)
+    body=models.CharField(max_length=500, blank=False)
+    rating=models.CharField(max_length=2, blank=False)

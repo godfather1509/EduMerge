@@ -1,5 +1,5 @@
 from django.urls import path,include
-from .views import Course_creation,GetAllCourses,GetCourse,GetCourses
+from .views import Course_creation,GetAllCourses,GetCourse,GetCourses, HandelReviews
 # from .views import UpdateEnrollment
 from rest_framework.routers import DefaultRouter
 
@@ -11,5 +11,6 @@ urlpatterns = [
     path('',include(router.urls)),
     path('my_courses/',GetAllCourses.as_view()),
     path('course/',GetCourse.as_view()),
+    path('review/',HandelReviews.as_view()),
     # path('enroll/<int:id>/',UpdateEnrollment.as_view())
 ]

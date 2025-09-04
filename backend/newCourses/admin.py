@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course,Module
+from .models import Course,Module, Review
 from userRegister.admin import custom_admin_site
 from django.contrib.auth import get_user_model
 
@@ -9,13 +9,17 @@ class ModuleLine(admin.TabularInline):
     model=Module
     extra=1
 
+class ReviewLine(admin.TabularInline):
+    model=Review
+    extra=1
+
 class CourseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name=="instructor":
             kwargs["queryset"]=User.objects.filter(role="instructor")
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
-    list_display=('id','course_name','date','instructor',"no_of_modules")
-    inlines=[ModuleLine]
+    list_display=('id','course_name','date','instructor',"avgRating","no_of_modules")
+    inlines=[ModuleLine, ReviewLine]
     ordering=('id',)
     search_fields=('instructor','course_name','date')
     # list_filter=('date',"total_enrolled",)
