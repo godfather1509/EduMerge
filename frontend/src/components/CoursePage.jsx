@@ -12,7 +12,7 @@ const CoursePage = () => {
     const [course, setCourse] = useState(null);
     const [bookmark, setBookmark] = useState(false)
     const [bookmarkData, setBookmarkData] = useState([])
-    const avgRating = 0;
+    const [avgRating, setAvgRating] = useState(0)
     moduleId = moduleId || 0;
     const navigate = useNavigate()
 
@@ -21,9 +21,8 @@ const CoursePage = () => {
     const [reviewRating, setReviewRating] = useState(4);
     const [reviewText, setReviewText] = useState("");
     const [reviewError, setReviewError] = useState("");
-    const handleSubmitReview = async () => {
 
-    }
+
     const courseBookmark = async () => {
         const bookmarkName = course[0].course_name + "-" + course[0].instructor.first_name + " " + course[0].instructor.last_name
         // if course is not bookmarked
@@ -113,8 +112,8 @@ const CoursePage = () => {
                 });
 
                 setCourse(response.data); // Store course data
-                // setReviews(response.data['reviews'])
-                console.log(response.data[0]['reviews'])
+                setReviews(response.data[0]['reviews'])
+                setAvgRating(response.data[0]['avgRating'])
                 console.log("Fetched course:", response.data);
             } catch (error) {
                 console.log(error.response?.data);
@@ -131,7 +130,38 @@ const CoursePage = () => {
     )
 
     const handleClick = (index) => {
+        // to navigate to new module
         navigate(`/course/${id}/${index}`)
+    }
+
+    const handleSubmitReview = async (e) => {
+        e.preventDefault()
+        setReviewError("")
+        const title = reviewTitle.trim() || "Anonymous"
+        const rating = Number(reviewRating)
+        const reviewBody = reviewText.trim()
+        if (!reviewBody) {
+            setReviewError("Please write short course review")
+            return;
+        }
+        const newReview = {
+            'course': id,
+            title,
+            rating,
+            'body': reviewBody,
+        }
+        try {
+            const response = await api.post(`/upload/review/`, newReview);
+            if (response.status === 200 || response.status === 201) {
+                // Add the new review to the existing reviews array
+                setReviews(prevReviews => [...prevReviews, newReview]);
+                window.location.reload()
+            }
+        } catch (error) {
+            console.log(error.response?.data);
+            console.log(error.response?.status);
+            setBookmark(false)
+        }
     }
 
     return (
@@ -186,8 +216,8 @@ const CoursePage = () => {
                                         `${course[0].instructor.first_name} ${course[0].instructor.last_name}` && (
                                             <button
                                                 className={`cursor-pointer text-white font-semibold px-4 py-2 rounded transition ${bookmark
-                                                        ? "bg-gray-500 hover:bg-gray-600"
-                                                        : "bg-red-600 hover:bg-red-700"
+                                                    ? "bg-gray-500 hover:bg-gray-600"
+                                                    : "bg-red-600 hover:bg-red-700"
                                                     }`}
                                                 onClick={courseBookmark}
                                             >
