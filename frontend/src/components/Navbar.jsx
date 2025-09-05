@@ -17,11 +17,7 @@ const Navbar = () => {
         isLoggedIn.setLogIn(false)
         const access_token=sessionStorage.getItem('access')
         try{
-            const response=await api.get("auth/logout/",{
-                headers:{
-                    Authorization:`Bearer ${access_token}`
-                }
-            })
+            const response=await api.get("auth/logout/")
         }
         catch(error){
             console.log(error)

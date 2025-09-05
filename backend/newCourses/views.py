@@ -6,7 +6,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from .models import Course
+from .models import Course, Review
 from .serializer import CourseSerializer, GetAllCoursesSerializer, ReviewSerializer
 
 
@@ -57,22 +57,28 @@ class HandelReviews(APIView):
 
     def post(self, request):
         data=request.data
-        course=get_object_or_404(Course, id=data["course"])
-        reviews=course.reviews.all()
+        print(data)
         serializer=ReviewSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            rating=0
-            if reviews.count()==0:
-                course.avgRating=rating
-            for r in reviews:
-                rating+=int(r.rating)
-            course.avgRating=rating/reviews.count()
-            course.save()
+            calc_avg_rating(data['course'])
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             print(serializer.errors)
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        print(request)
+        data=request.data
+        print(data['id'])
+        try:
+            review=Review.objects.get(id=data['id'])
+        except Review.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        course_id = review.course.id
+        review.delete()
+        calc_avg_rating(course_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class GetCourse(APIView):
     permission_classes = [IsAuthenticated]
@@ -84,4 +90,25 @@ class GetCourse(APIView):
             return Response({"error": "No course ID"})
         course = Course.objects.filter(id=courseId)
         serializer = GetAllCoursesSerializer(course, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data=serializer.data
+        for r in data[0]['reviews']:
+            user=User.objects.get(id=r['user'])
+            r['name']=user.get_full_name()
+            r['gender']=user.gender
+            r['role']=user.role
+            r['email']=user.email
+        # print(data[0]['reviews'])
+        return Response(data=data, status=status.HTTP_200_OK)
+
+
+def calc_avg_rating(id):
+    course=get_object_or_404(Course, id=id)
+    reviews=course.reviews.all()
+    if reviews.count()>0:
+        rating=0
+        for r in reviews:
+            rating+=int(r.rating)
+        course.avgRating=rating/reviews.count()
+    else:
+        course.avgRating=data['rating']
+    course.save()

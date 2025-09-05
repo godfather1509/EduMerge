@@ -6,6 +6,7 @@ import api from '../api/baseusrl'
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import { FaStar } from "react-icons/fa";
 
 const CoursePage = () => {
     let { id, moduleId } = useParams();
@@ -145,12 +146,14 @@ const CoursePage = () => {
             return;
         }
         const newReview = {
+            'user': sessionStorage.getItem("userId"),
             'course': id,
             title,
             rating,
             'body': reviewBody,
         }
         try {
+            // console.log(newReview)
             const response = await api.post(`/upload/review/`, newReview);
             if (response.status === 200 || response.status === 201) {
                 // Add the new review to the existing reviews array
@@ -252,7 +255,7 @@ const CoursePage = () => {
                                             {avgRating ? (
                                                 <>
                                                     <span className="font-semibold">{avgRating}</span>{" "}
-                                                    <span className="text-gray-500">avg</span> •{" "}
+                                                    <FaStar className="inline text-yellow-400 w-4 h-4" /> •{" "}
                                                     <span className="text-gray-500">{reviews.length} reviews</span>
                                                 </>
                                             ) : (
@@ -326,34 +329,82 @@ const CoursePage = () => {
                                     </form>
 
                                     {/* Review list */}
-                                    <div className="space-y-4">
+                                    <div className="space-y-3">
                                         {reviews.length === 0 ? (
-                                            <div className="text-gray-500">
-                                                Be the first to review this course.
-                                            </div>
+                                            <div className="text-gray-500">Be the first to review this course.</div>
                                         ) : (
                                             reviews.map((r, i) => (
-                                                <article key={i} className="bg-white rounded-lg p-4 shadow-sm">
-                                                    <div className="flex items-start justify-between">
-                                                        <div>
-                                                            <div className="flex items-center gap-3">
-                                                                <div className="text-sm text-black font-semibold">{r.title}</div>
-                                                                <div className="text-xs text-black">
-                                                                    • {new Date(r.createdAt).toLocaleDateString("en-GB")}
+                                                <article
+                                                    key={i}
+                                                    className="bg-white rounded-lg p-3 shadow-sm border border-gray-200 flex gap-3"
+                                                >
+                                                    {/* Avatar */}
+                                                    <div className="flex-shrink-0">
+                                                        <img
+                                                            src={
+                                                                r.role === "student" || r.role === "Student"
+                                                                    ? "/student.png"
+                                                                    : r.gender === "FEMALE" || r.gender === "Female"
+                                                                        ? "/femaleInstructor.avif"
+                                                                        : "/maleInstructor.jpg"
+                                                            }
+                                                            alt={r.name}
+                                                            className="w-10 h-10 rounded-full object-cover"
+                                                        />
+                                                    </div>
+
+                                                    {/* Review content */}
+                                                    <div className="flex-1">
+                                                        <div className="flex justify-between items-center mb-1">
+                                                            {/* Name + Date */}
+                                                            <div>
+                                                                <p className="text-sm font-semibold text-gray-900">{r.name}</p>
+                                                                <p className="text-xs text-gray-500">
+                                                                    {new Date(r.createdAt).toLocaleDateString("en-GB")}
+                                                                </p>
+                                                            </div>
+
+                                                            {/* Rating + Conditional Delete */}
+                                                            <div className="flex items-center gap-2">
+                                                                <div className="flex items-center gap-1 bg-black px-2 py-0.5 rounded-full">
+                                                                    <span className="text-xs font-semibold text-white">{r.rating}</span>
+                                                                    <FaStar className="text-yellow-400 w-3.5 h-3.5" />
                                                                 </div>
+
+                                                                {/* ✅ Show Delete button if review belongs to logged-in user */}
+                                                                {String(r.email) === sessionStorage.getItem("email") && (
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            console.log("Deleting review:", r.id);
+                                                                            const handleDelete = async (id) => {
+                                                                                const response = await api.delete(`/upload/review/`, { data: { id } });
+                                                                                console.log(response)
+                                                                                if (response.status === 204) {
+                                                                                    window.location.reload()
+                                                                                }
+                                                                            }
+                                                                            handleDelete(r.id)
+                                                                            // 🔥 Call your API to delete review here
+                                                                        }}
+                                                                        className="text-xs bg-red-600 cursor-pointer text-white px-2 py-1 rounded hover:bg-red-700 transition"
+                                                                    >
+                                                                        Delete
+                                                                    </button>
+                                                                )}
                                                             </div>
-                                                            <div className="mt-2 text-sm text-black">{r.body}</div>
                                                         </div>
-                                                        <div className="ml-4 flex-shrink-0">
-                                                            <div className="bg-black px-3 py-1 rounded-full text-sm font-semibold text-white">
-                                                                {r.rating}
-                                                            </div>
-                                                        </div>
+
+                                                        {/* Title + Body */}
+                                                        <p className="text-sm font-medium text-gray-800">{r.title}</p>
+                                                        <p className="text-sm text-gray-700 leading-snug">{r.body}</p>
                                                     </div>
                                                 </article>
                                             ))
                                         )}
                                     </div>
+
+
+
                                 </section>
                                 {/* ================= END REVIEWS ================= */}
                             </div>

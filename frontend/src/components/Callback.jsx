@@ -22,9 +22,11 @@ function Callback() {
 
     useEffect(() => {
         if (registered=="True") {
+            // const allParams = Object.fromEntries(searchParam.entries());
+            // console.log(allParams);
             sessionStorage.setItem('access', access)
             sessionStorage.setItem('refresh', refresh)
-            sessionStorage.setItem('userId', searchParam.get("userId"))
+            sessionStorage.setItem('userId', searchParam.get("user_id"))
             sessionStorage.setItem('role', searchParam.get("role"))
             sessionStorage.setItem('gender', searchParam.get('gender'))
             sessionStorage.setItem('name', searchParam.get('name'))

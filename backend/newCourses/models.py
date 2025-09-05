@@ -26,6 +26,7 @@ class Module(models.Model):
         return f"{self.order}.{self.module_name}"
 
 class Review(models.Model):
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_reviews", blank=True, null=True)
     course= models.ForeignKey(Course,on_delete=models.CASCADE, related_name="reviews")
     title=models.CharField(max_length=50, blank=False)
     body=models.CharField(max_length=500, blank=False)

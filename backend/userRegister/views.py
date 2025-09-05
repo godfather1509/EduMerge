@@ -95,6 +95,7 @@ class Oauth_Handler(APIView):
         if all([user.gender, user.qualification, user.role]):
             bookmarks = bk.objects.filter(user=user)
             bookmark_serializer = BookmarkSerializer(bookmarks, many=True).data
+            print(user.id)
             payload={
             "registered":True,
             "access_token":refresh.access_token,

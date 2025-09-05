@@ -14,7 +14,7 @@ class ModuleSerializer(ModelSerializer):
 class ReviewSerializer(ModelSerializer):
     class Meta:
         model=Review
-        fields=["course","title", "body", "rating", "createdAt"]
+        fields=["id", "user","course","title", "body", "rating", "createdAt"]
 
 
 class InstructorSerializer(ModelSerializer):

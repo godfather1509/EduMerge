@@ -13,6 +13,10 @@ class ReviewLine(admin.TabularInline):
     model=Review
     extra=1
 
+class ReviewAdmin(admin.ModelAdmin):
+    list_display=('id', 'user','course', 'title', 'body', 'rating')
+    ordering=('id',)
+
 class CourseAdmin(admin.ModelAdmin):
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name=="instructor":
@@ -25,4 +29,5 @@ class CourseAdmin(admin.ModelAdmin):
     # list_filter=('date',"total_enrolled",)
 
 custom_admin_site.register(Course,CourseAdmin)
+custom_admin_site.register(Review,ReviewAdmin)
 
