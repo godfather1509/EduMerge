@@ -15,28 +15,35 @@ const Navbar = () => {
 
     const LogOut = async () => {
         isLoggedIn.setLogIn(false)
-        const access_token=sessionStorage.getItem('access')
-        try{
-            const response=await api.get("auth/logout/")
+        const access_token = sessionStorage.getItem('access')
+        try {
+            const response = await api.get("auth/logout/")
         }
-        catch(error){
+        catch (error) {
             console.log(error)
         }
         sessionStorage.clear()
         navigate("/login")
     }
 
-    const handlePost = async (search) => {
-        console.log(search)
-        // try {
-        //     const response = await api.post('', search)
-        // } catch (error) {
-        //     console.log(error.response.data)
-        //     console.log(error.response.status)
-        //     setError(error.response?.data || { message: "Search failed" });
-        //     userLogin.setLogIn(false)
-        // }
-    }
+    const handleGet = async (search) => {
+        console.log("Search params:", search.search);
+        try {
+            const response = await api.get(`/scrape_courses/courses/${search.search}/`);
+            console.log("Data:", response.data);
+            // do something with response.data
+        } catch (error) {
+            if (error.response) {
+                console.error("API error:", error.response.data);
+                console.error("Status:", error.response.status);
+                setError(error.response.data || { message: "Search failed" });
+            } else {
+                console.error("Network or config error:", error.message);
+                setError({ message: "Network error. Please try again." });
+            }
+        }
+    };
+
 
     return (
         <nav className="bg-white shadow-sm border-b border-gray-200 dark:bg-gray-900 dark:border-gray-700">
@@ -51,7 +58,7 @@ const Navbar = () => {
                 <form className="flex items-center w-[550px] mx-auto"
                     onSubmit={
                         handleSubmit((data) => {
-                            handlePost(data)
+                            handleGet(data)
                         })}>
                     <label htmlFor="simple-search" className="sr-only">Search</label>
                     <div className="relative w-full">

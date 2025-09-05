@@ -1,3 +1,4 @@
+from multiprocessing import Process, Manager
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -46,7 +47,8 @@ class WebScraper(APIView):
 
 class SearchScraper(APIView):
     def get(self, request, query):
+        print(query)
         data=[]
         data.append(search_scraper(query))
         data.append(parse_youtube(query))
-        return Response(data, status=status.HTTP_302_FOUND)
+        return Response(data, status=status.HTTP_200_OK)
