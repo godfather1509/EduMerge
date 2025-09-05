@@ -24,6 +24,7 @@ const Home = () => {
     return (
         <div className="p-4 space-y-8">
             {/* Courses Section */}
+            <h2>EduMerge Courses</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {courses.length === 0 ? (
                     <p className="text-gray-500">No courses available.</p>
@@ -66,6 +67,7 @@ const Home = () => {
             <hr className="border-t border-gray-300 dark:border-gray-700" />
 
             {/* WebCourses Section */}
+            <h2>MIT OCW Courses</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {webCourses.length === 0 ? (
                     <p className="text-gray-500">No web courses available.</p>
