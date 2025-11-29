@@ -44,6 +44,24 @@ class WebScraper(APIView):
             print("Data already exists in the collection.")
             return Response(convert_id(data), status=status.HTTP_200_OK)
 
+class NewWebScrapper(APIView):
+
+    def post(self, request):
+        data=request.data
+        uri = os.getenv("MONGO_DB_URL")
+        # Create a new client and connect to the server
+        client = MongoClient(uri, server_api=ServerApi("1"))
+        mydb = client[
+            "ScrapperDB"
+        ]  # this will create database if it does not already exists
+        mytable = mydb["scraped_data"]
+        mytable.delete_many({})
+        print("The collection is empty. Inserting data...")
+        index = mytable.insert_many(data)
+        return Response(
+            convert_id(data), status=status.HTTP_200_OK
+        )  # Use 201 for created
+
 
 class SearchScraper(APIView):
     def get(self, request, query):
