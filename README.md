@@ -8,4 +8,4 @@ EduMerge is a fully open-source platform created for researchers, students, and 
 
 ![Course Upload Page](image-1.png)
 
-![Course Page](image-3.png)
+![Course Page](image-2.png)
